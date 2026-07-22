@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>सार्वजनिक सेवा सन्तुष्टि ड्यासबोर्ड</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Nepali Date Picker CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="nepalData.js"></script>
+  <link rel="stylesheet" href="dashboard.css" />
+  <script>
+    // Check if user is logged in
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+  </script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="brand-mark">
+        <img src="emblem.webp" alt="" />
+      </div>
+      <div class="header-copy">
+        <div class="headline-lines">
+          <span class="line1">राष्ट्रिय सतर्कता केन्द्र</span>
+          <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>
+          <span class="line3">सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण</span>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="लगआउट">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+      <button class="close-btn" onclick="closeDashboard()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Filters Section -->
+      <div class="filters-section">
+        <h3>फिल्टरहरू</h3>
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label>प्रदेश</label>
+            <select id="provinceFilter" onchange="onProvinceChange()">
+              <option value="all">सबै प्रदेशहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>जिल्ला</label>
+            <select id="districtFilter" onchange="onDistrictChange()">
+              <option value="all">सबै जिल्लाहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>स्थानीय तह</label>
+            <select id="localLevelFilter" onchange="applyFilters()">
+              <option value="all">सबै स्थानीय तह</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>कार्यालय</label>
+            <select id="officeFilter" onchange="onOfficeChange()">
+              <option value="all">सबै कार्यालयहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>उमेर समूह</label>
+            <select id="ageGroupFilter" onchange="applyFilters()">
+              <option value="all">सबै</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>सुरु मिति</label>
+            <input type="date" id="startDate" onchange="applyFilters()" />
+          </div>
+          <div class="filter-group">
+            <label>अन्त्य मिति</label>
+            <input type="date" id="endDate" onchange="applyFilters()" />
+          </div>
+          <div class="filter-group">
+            <label>प्रश्न अनुसार</label>
+            <select id="questionFilter" onchange="applyFilters()">
+              <option value="all">सबै प्रश्नहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>समस्या अनुसार</label>
+            <select id="problemFilter" onchange="applyFilters()">
+              <option value="all">सबै समस्याहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>सुझाव अनुसार</label>
+            <select id="suggestionFilter" onchange="applyFilters()">
+              <option value="all">सबै सुझावहरू</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>&nbsp;</label>
+            <button class="reset-btn" onclick="resetFilters()">रिसेट गर्नुहोस्</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-icon total">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalResponses">०</div>
+            <div class="stat-label">कुल प्रतिक्रियाहरू</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon office">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalOffices">०</div>
+            <div class="stat-label">कार्यालयहरू</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon satisfaction">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+              <line x1="9" y1="9" x2="9.01" y2="9"></line>
+              <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="avgSatisfaction">०.०</div>
+            <div class="stat-label">औसत सन्तुष्टि स्कोर</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon district">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalDistricts">०</div>
+            <div class="stat-label">जिल्लाहरू</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <div class="chart-container">
+          <h3>कार्यालय अनुसार प्रतिक्रिया</h3>
+          <canvas id="officeChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>सन्तुष्टि स्कोर तुलना</h3>
+          <canvas id="satisfactionChart"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-section">
+        <div class="chart-container">
+          <h3>उमेर समूह वितरण</h3>
+          <canvas id="ageGroupChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>जिल्ला अनुसार प्रतिक्रिया</h3>
+          <canvas id="districtChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-section">
+        <div class="table-header">
+          <h3>विस्तृत डाटा</h3>
+          <div class="table-actions">
+            <input type="text" id="tableSearch" placeholder="खोज्नुहोस्..." наkeyup="filterTable()" />
+            <button onclick="exportData()">निर्यात गर्नुहोस्</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>मिति</th>
+                <th>कार्यालय</th>
+                <th>जिल्ला/स्थानीय तह</th>
+                <th>उमेर समूह</th>
+                <th>सन्तुष्टि स्कोर</th>
+                <th>समस्या</th>
+                <th>सुझाव</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr>
+                <td colspan="7" class="no-data">डाटा लोड हुँदैछ...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

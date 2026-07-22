@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण फारम</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Nepali Date Picker CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
+  <style>
+    /* ----- root variables (index1 style) ----- */
+    :root {
+      --paper: #FBF8F0;
+      --paper-deep: #F3EDDD;
+      --ink: #242118;
+      --ink-soft: #5b5648;
+      --crimson: #A6182A;
+      --crimson-deep: #7E1220;
+      --indigo: #0C3768;
+      --gold: #B9852E;
+      --line: #DED4BC;
+      --card: #FFFFFF;
+      --ok: #3E7A4C;
+
+      /* Nepali Date Picker Variables Integration */
+      --ap-white: #FFFFFF;
+      --ap-black: #242118;
+      --rounded-md: 12px;
+      --gray-50: #FBF8F0;
+      --gray-100: #F3EDDD;
+      --gray-200: #DED4BC;
+      --gray-300: #DED4BC;
+      --gray-400: #5b5648;
+      --gray-500: #5b5648;
+      --gray-600: #242118;
+      --gray-700: #242118;
+      --gray-800: #242118;
+      --gray-900: #242118;
+      --gray-950: #242118;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background:
+        linear-gradient(var(--paper), var(--paper)),
+        repeating-linear-gradient(135deg, rgba(166, 24, 42, 0.025) 0 2px, transparent 2px 14px);
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: "Mukta", "Kalimati", "Noto Sans Devanagari", "Mangal", Arial, sans-serif;
+      line-height: 1.6;
+      padding: 28px 14px 80px;
+    }
+    .sheet {
+      max-width: 840px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgba(36, 33, 24, 0.45);
+      position: relative;
+      overflow: visible;
+    }
+    .flagbar {
+      height: 8px;
+      background: linear-gradient(90deg, var(--crimson) 0 50%, var(--indigo) 50% 100%);
+    }
+    header {
+      padding: 34px 40px 26px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 22px;
+      min-height: 160px;
+      background:
+        linear-gradient(rgba(251, 248, 240, 0.78), rgba(251, 248, 240, 0.82)),
+        url('homepage-bg.webp') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .dashboard-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      background: var(--card);
+      border: 1.5px solid var(--indigo);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(12, 55, 104, 0.15);
+    }
+    .dashboard-btn:hover {
+      background: var(--indigo);
+      transform: scale(1.05);
+    }
+    .dashboard-btn:hover svg {
+      stroke: #fff;
+    }
+    .dashboard-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--indigo);
+      transition: stroke 0.2s ease;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(12, 55, 104, 0.02), rgba(166, 24, 42, 0.02));
+      pointer-events: none;
+    }
+    .brand-mark {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      width: 132px;
+      height: 132px;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: none;
+    }
+    .brand-mark img {
+      width: 92px;
+      height: 92px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(12, 55, 104, 0.2));
+    }
+    .header-copy {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 420px;
+      min-width: 0;
+    }
+    .headline-lines {
+      margin: 0;
+      display: grid;
+      gap: 4px;
+    }
+    .headline-lines .line1,
+    .headline-lines .line2,
+    .headline-lines .line3 {
+      display: block;
+      font-family: 'Noto Serif Devanagari', serif;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .headline-lines .line1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--crimson-deep);
+    }
+    .headline-lines .line2 {
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--indigo);
+    }
+    .headline-lines .line3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--crimson);
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--ink-soft);
+      max-width: 560px;
+      margin: 10px 0 0;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+      flex: 1 1 100%;
+    }
+    .meta-field {
+      flex: 1 1 220px;
+      border-bottom: 1px solid var(--line);
+      padding: 6px 2px 8px;
+    }
+    .meta-field label {
+      display: block;
+      font-size: 11.5px;
+      letter-spacing: .06em;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .meta-field input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: "Mukta", "Kalimati", "Noto Sans Devanagari", Arial, sans-serif;
+      font-size: 14.5px;
+      color: var(--ink);
+      padding: 2px 0;
+    }
+    .meta-field input[type="date"] {
+      cursor: pointer;
+      color-scheme: light;
+    }
+    .intro-note {
+      margin: 22px 40px 0;
+      background: var(--paper-deep);
+      border-left: 3px solid var(--gold);
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      position: relative;
+      z-index: 1;
+    }
+    .legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 16px 40px 0;
+      font-size: 12.5px;
+      color: var(--ink-soft);
+    }
+    .legend span b {
+      color: var(--ink);
+    }
+    main {
+      padding: 22px 40px 10px;
+    }
+
+    /* office section (collapsible) */
+    .office {
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--card);
+      transition: box-shadow .2s ease;
+    }
+    .office[open] {
+      box-shadow: 0 10px 24px -20px rgba(12, 55, 104, .5);
+    }
+    .office summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--paper-deep);
+      border-bottom: 1px solid transparent;
+      user-select: none;
+    }
+    .office[open] summary {
+      border-bottom-color: var(--line);
+    }
+    .office summary::-webkit-details-marker {
+      display: none;
+    }
+    .icon-badge {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1.5px solid var(--indigo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--indigo);
+    }
+    .office[open] .icon-badge {
+      background: var(--indigo);
+      color: #fff;
+    }
+    .office-title {
+      flex: 1 1 auto;
+    }
+    .office-title h2 {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 17.5px;
+      font-weight: 600;
+      margin: 0 0 2px;
+      color: var(--ink);
+    }
+    .office-title small {
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .chev {
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--crimson);
+      transition: transform .25s ease;
+      font-size: 13px;
+    }
+    .office[open] .chev {
+      transform: rotate(45deg);
+    }
+
+    .qwrap {
+      padding: 6px 20px 20px;
+    }
+    .qrow {
+      padding: 16px 4px;
+      border-bottom: 1px dashed var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+    .qrow:last-child {
+      border-bottom: none;
+    }
+    .qnum {
+      flex: 0 0 24px;
+      font-family: 'Noto Serif Devanagari', serif;
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 14px;
+    }
+    .qtext {
+      flex: 1 1 320px;
+      font-size: 14.5px;
+      color: var(--ink);
+    }
+    .qcontrol {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      position: relative;
+    }
+    .pill input {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+      cursor: pointer;
+      margin: 0;
+    }
+    .pill span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      background: var(--paper);
+      transition: .15s ease;
+    }
+    .pill input:checked+span {
+      background: var(--indigo);
+      border-color: var(--indigo);
+      color: #fff;
+    }
+    .pill.yes input:checked+span {
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+    .pill.no input:checked+span {
+      background: var(--crimson);
+      border-color: var(--crimson);
+    }
+    .pill input:focus-visible+span {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+    .grade-labels {
+      flex-basis: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      max-width: 270px;
+      margin-top: 2px;
+    }
+
+    .office-notes {
+      padding: 0 4px 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .office-note-block {
+      display: grid;
+      gap: 6px;
+    }
+    .office-note-block label {
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .office-note-block textarea {
+      width: 100%;
+      min-height: 84px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .office-actions {
+      padding: 10px 20px 18px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .mini-btn {
+      font-size: 12px;
+      color: var(--indigo);
+      background: none;
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+    .mini-btn:hover {
+      border-color: var(--indigo);
+    }
+
+    .controls-bar {
+      padding: 6px 40px 0;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .controls-bar button {
+      font-family: inherit;
+      font-size: 12.5px;
+      letter-spacing: .02em;
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      padding: 8px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+    .controls-bar button:hover {
+      border-color: var(--indigo);
+      color: var(--indigo);
+    }
+
+    footer {
+      padding: 26px 40px 40px;
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+    }
+    .suggestion-box {
+      margin: 18px 0 20px;
+      padding: 16px;
+      background: var(--paper-deep);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .suggestion-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .suggestion-box textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--paper-deep);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--crimson), var(--indigo));
+      transition: width .3s ease;
+    }
+    .progress-text {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      padding: 14px 26px;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .01em;
+      border-radius: 2px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px -14px rgba(166, 24, 42, .6);
+    }
+    .submit-btn:hover {
+      background: var(--crimson-deep);
+    }
+    .fine-print {
+      margin-top: 14px;
+      font-size: 11.5px;
+      color: var(--ink-soft);
+    }
+    #result {
+      margin-top: 22px;
+      padding: 18px;
+      background: var(--paper-deep);
+      border-left: 3px solid var(--ok);
+      font-size: 13.5px;
+      display: none;
+    }
+    #result.show {
+      display: block;
+    }
+    #result h3 {
+      margin: 0 0 8px;
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 16px;
+    }
+    #result a {
+      color: var(--indigo);
+    }
+
+    @media (max-width:600px) {
+      header,
+      main,
+      footer,
+      .controls-bar,
+      .intro-note,
+      .legend {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      header {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 10px;
+        padding: 12px 14px;
+        min-height: 94px;
+        background:
+          linear-gradient(rgba(251, 248, 240, 0.65), rgba(251, 248, 240, 0.72)),
+          url('homepage-bg.webp') center/cover no-repeat;
+      }
+      .brand-mark {
+        width: 56px;
+        height: 56px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        margin-right: 2px;
+        flex: 0 0 auto;
+      }
+      .brand-mark img {
+        width: 56px;
+        height: 56px;
+      }
+      .header-copy {
+        flex: 1 1 auto;
+      }
+      .headline-lines {
+        gap: 2px;
+      }
+      .headline-lines .line1 {
+        font-size: 11px;
+        line-height: 1.1;
+      }
+      .headline-lines .line2 {
+        font-size: 15px;
+        line-height: 1.15;
+      }
+      .headline-lines .line3 {
+        font-size: 13px;
+        line-height: 1.15;
+      }
+      .subtitle {
+        display: none;
+      }
+      .qcontrol {
+        width: 100%;
+      }
+    }
+
+    /* ----- Custom styling for Nepali Date Picker to look premium ----- */
+    .datepicker-wrapper {
+      position: relative;
+      display: block;
+      width: 100%;
+      z-index: 2;
+    }
+    .datepicker-wrapper .calendar-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+    }
+    .datepicker-wrapper input:hover + .calendar-icon svg,
+    .datepicker-wrapper input:focus + .calendar-icon svg {
+      stroke: var(--crimson);
+    }
+    
+    /* Theme override for @anuz-pandey/nepali-date-picker dropdown */
+    .ap-card {
+      position: relative !important;
+      font-family: "Mukta", "Kalimati", "Noto Sans Devanagari", sans-serif !important;
+      background: var(--card) !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 12px 36px -12px rgba(12, 55, 104, 0.3) !important;
+      padding: 14px !important;
+      margin-top: 6px !important;
+      z-index: 9999 !important;
+      color: var(--ink) !important;
+      transition: all 0.2s ease !important;
+    }
+    .ap-header {
+      background: var(--paper-deep) !important;
+      border-bottom: 1px solid var(--line) !important;
+      border-radius: 8px 8px 0 0 !important;
+      padding: 8px 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+    }
+    .ap-header select {
+      font-family: "Mukta", "Kalimati", sans-serif !important;
+      border: 1px solid var(--line) !important;
+      background: var(--card) !important;
+      color: var(--ink) !important;
+      padding: 4px 8px !important;
+      border-radius: 6px !important;
+      font-size: 14px !important;
+      outline: none !important;
+      cursor: pointer !important;
+    }
+    .ap-header select:focus {
+      border-color: var(--indigo) !important;
+    }
+    .ap-header button {
+      background: var(--card) !important;
+      border: 1px solid var(--line) !important;
+      color: var(--crimson) !important;
+      border-radius: 50% !important;
+      width: 28px !important;
+      height: 28px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+    }
+    .ap-header button:hover {
+      background: var(--crimson) !important;
+      color: #fff !important;
+      border-color: var(--crimson) !important;
+    }
+    /* Days grid formatting */
+    .ap-body {
+      padding: 8px 0 0 0 !important;
+    }
+    .ap-weekdays {
+      color: var(--ink-soft) !important;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      text-transform: uppercase !important;
+      margin-bottom: 6px !important;
+    }
+    .ap-day {
+      font-family: "Mukta", "Kalimati", sans-serif !important;
+      width: 34px !important;
+      height: 34px !important;
+      line-height: 34px !important;
+      border-radius: 50% !important;
+      transition: all 0.2s ease !important;
+      font-size: 14px !important;
+      color: var(--ink) !important;
+      cursor: pointer !important;
+      margin: 2px !important;
+      display: inline-block !important;
+      text-align: center !important;
+    }
+    .ap-day:hover:not(.ap-disabled) {
+      background: var(--paper-deep) !important;
+      color: var(--crimson) !important;
+    }
+    .ap-active, .ap-selected {
+      background: var(--indigo) !important;
+      color: #fff !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 10px rgba(12, 55, 104, 0.3) !important;
+    }
+    .ap-today {
+      border: 1.5px solid var(--gold) !important;
+      color: var(--gold) !important;
+      font-weight: 600 !important;
+    }
+    .ap-disabled {
+      color: var(--line) !important;
+      cursor: not-allowed !important;
+      opacity: 0.4 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <!-- <div class="flagbar"></div> -->
+    <header>
+      <button class="dashboard-btn" onclick="openDashboard()" aria-label="Dashboard खोल्नुहोस्">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+      </button>
+      <div class="brand-mark" aria-hidden="true">
+        <img src="emblem.webp" alt="" />
+      </div>
+
+      <div class="header-copy">
+        <div class="headline-lines">
+          <span class="line1">राष्ट्रिय सतर्कता केन्द्र</span>
+          <span class="line2">सेवाग्राही प्रतिक्रिया संकलन फारम</span>
+          <span class="line3">सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण</span>
+        </div>
+        <p class="subtitle">तल सूचीबद्ध १० वटा सरकारी सेवा प्रवाह गर्ने कार्यालय/निकायमध्ये तपाईंले हालसालै सेवा लिनुभएको खण्ड (हरू) खोलेर प्रश्नको जवाफ भर्नुहोस्। सेवा नलिएको खण्ड खाली छोड्न सक्नुहुन्छ।</p>
+      </div>
+
+      <div class="meta-row">
+        <div class="meta-field">
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवा लिएको जिल्ला/स्थानीय तह</label>
+          <input type="text" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px;" placeholder="जस्तै: काठमाडौं महानगरपालिका" />
+        </div>
+        <div class="meta-field">
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवाग्राहीको उमेर समूह</label>
+          <input type="text" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px;" placeholder="जस्तै: १८-३०" />
+        </div>
+        <div class="meta-field" style="position: relative;">
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवा लिएको मिति</label>
+          <div class="datepicker-wrapper">
+            <input type="text" id="nepali-datepicker" lang="ne" aria-label="सेवा लिएको मिति" style="border: 1px solid #291b93; padding: 10px 40px 10px 10px; border-radius: 5px; width: 100%; box-sizing: border-box; background-color: #fff; cursor: pointer;" placeholder="मिति चयन गर्नुहोस्" readonly />
+            <span class="calendar-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <p class="intro-note">यो फारम गोप्य रहनेछ। तपाईंको प्रतिक्रियाले सम्बन्धित निकायको सेवा गुणस्तर सुधार्न मद्दत गर्नेछ। कृपया वस्तुनिष्ठ जवाफ दिनुहोला।</p>
+    <div class="legend">
+      <span><b>हो/होइन</b> — छोटो जवाफका लागि</span>
+      <span><b>१–५ स्तर</b> — १ = धेरै असन्तुष्ट, २ = असन्तुष्ट, ३ = मध्यम, ४ = सन्तुष्ट, ५ = धेरै सन्तुष्ट</span>
+    </div>
+
+    <div class="controls-bar">
+      <button type="button" onclick="toggleAll(true)">सबै खण्ड खोल्नुहोस्</button>
+      <button type="button" onclick="toggleAll(false)">सबै खण्ड बन्द गर्नुहोस्</button>
+    </div>
+
+    <main id="officesRoot"></main>
+
+    <footer>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">० / १०० प्रश्न भरियो</div>
+      </div>
+
+      <div class="suggestion-box">
+        <label for="finalSuggestion">अन्य कुनै निकायको सेवा सुधारका लागि कुनै सुझाव दिन चाहनुहुन्छ?</label>
+        <textarea id="finalSuggestion" placeholder="यदि कुनै सुझाव छ भने यहाँ लेख्नुहोस्..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitForm()">
+        फारम पेश गर्नुहोस्
+      </button>
+      <p class="fine-print">पेश गरेपछि तपाईंको जवाफको सारांश यही पृष्ठमा देखिनेछ र फाइलको रूपमा डाउनलोड गर्न सकिनेछ। कुनै जवाफ सर्भरमा स्वतः पठाइँदैन।</p>
+      <div id="result"></div>
+    </footer>
+  </div>
+
+  <script>
+    // ----- icons from index1 (unchanged) -----
+    const ICONS = {
+      doc: '<path d="M13 4h9l7 7v19a2 2 0 0 1-2 2H13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M22 4v7h7" stroke="currentColor" stroke-width="1.6" fill="none"/>',
+      land: '<path d="M6 26 16 8l10 18z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M6 26h20" stroke="currentColor" stroke-width="1.6"/><path d="M11 26l5-9 5 9" stroke="currentColor" stroke-width="1.2" fill="none"/>',
+      map: '<path d="M6 9l8-3 8 3 8-3v18l-8 3-8-3-8 3z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M14 6v18M22 9v18" stroke="currentColor" stroke-width="1.2"/>',
+      car: '<path d="M6 20l2-7a3 3 0 0 1 3-2h10a3 3 0 0 1 3 2l2 7" stroke="currentColor" stroke-width="1.6" fill="none"/><rect x="5" y="20" width="22" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="10" cy="26" r="2" fill="currentColor"/><circle cx="22" cy="26" r="2" fill="currentColor"/>',
+      coin: '<circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.6" fill="none"/><text x="16" y="20" text-anchor="middle" font-size="11" fill="currentColor" font-family="serif">रु</text>',
+      ward: '<path d="M8 26V13l8-6 8 6v13" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M13 26v-7h6v7" stroke="currentColor" stroke-width="1.4" fill="none"/>',
+      health: '<circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M16 11v10M11 16h10" stroke="currentColor" stroke-width="1.8"/>',
+      school: '<path d="M4 12 16 6l12 6-12 6z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 15v6c0 1.5 3 3 7 3s7-1.5 7-3v-6" stroke="currentColor" stroke-width="1.4" fill="none"/>',
+      police: '<path d="M16 5l9 3v7c0 6-4 10-9 12-5-2-9-6-9-12V8z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 16l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none"/>',
+      bolt: '<path d="M17 4 7 18h7l-2 10 12-16h-8z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>'
+    };
+
+    // ----- office definitions (10 offices, each with 10 questions from index2) -----
+    const OFFICES = [{
+      id: 'dao',
+      icon: 'doc',
+      name: 'जिल्ला प्रशासन कार्यालय',
+      tag: 'नागरिकता, पासपोर्ट, राष्ट्रिय परिचयपत्र, सिफारिस',
+      q: [
+        '१. नागरिकता/पासपोर्ट/राष्ट्रिय परिचयपत्र/सिफारिसको लागि पालो पाउन सहज थियो ?',
+        '२. कर्मचारीको व्यवहार मैत्रीपूर्ण थियो ?',
+        '३. सेवा प्रक्रिया सहज र पारदर्शी थियो ?',
+        '४. कागजातको सूची स्पष्ट र सहज थियो ?',
+        '५. सेवा समयमै (समय सीमा भित्र) प्राप्त भयो ?',
+        '६. शुल्क/दस्तुर उचित र पारदर्शी थियो ?',
+        '७. अनलाइन/डिजिटल सेवाको सुविधा उपलब्ध थियो ?',
+        '८. उजुरी/गुनासो दर्ता गर्ने प्रणाली प्रभावकारी थियो?',
+        '९. समग्र सेवा अनुभवलाई कति स्कोर दिनुहुन्छ ? (१–५)',
+        
+      ]
+    }, {
+      id: 'malpot',
+      icon: 'land',
+      name: 'मालपोत कार्यालय',
+      tag: 'रजिष्ट्रेशन, नामसारी, हाल-साविक आदि',
+      q: [
+        '१. रजिष्ट्रेशन, नामसारी, हाल-साविकको प्रक्रिया सहज थियो ?',
+        '२. राजस्व/शुल्कको दर स्पष्ट र उचित थियो ?',
+        '३. कर्मचारीको सहयोगीपन कस्तो थियो ?',
+        '४. सेवा प्राप्ति समयमै भयो ?',
+        '५. मालपोत कार्यालयको सेवा केन्द्रको भौतिक वातावरण सहज थियो ?',
+        '६. अनलाइन भुक्तानी/फारमको सुविधा थियो ?',
+        '७. जग्गा नामसारी, लिखत पास गर्न समस्या भएन ?',
+        '८. सेवा शुल्कको रसिद/बिल प्राप्त भयो ?',
+        '९. मालपोत सेवाको समग्र सन्तुष्टि (१–५)',
+        
+      ]
+    }, {
+      id: 'napi',
+      icon: 'map',
+      name: 'नापी कार्यालय',
+      tag: 'नक्सा, नापी, सीमा',
+      q: [
+        '१. नक्सा/नापीको प्रतिलिपि पाउन सजिलो थियो ?',
+        '२. सेवामा पहुँच र सहयोग राम्रो थियो ?',
+        '३. सीमा विवाद समाधान गर्न सहज भयो ?',
+        '४. अनलाइन नक्सा सेवा उपलब्ध थियो ?',
+        '५. सेवाको समयमै प्राप्त भयो ?',
+        '६. कार्यालयको शुल्क दस्तूरको जानकारी स्पष्ट थियो ?',
+        '७. कागजातको झन्झट कम थियो ?',
+        '८. सेवा प्राप्त गर्न धेरै पटक आउनुपर्यो ?',
+        '९. समग्र सेवाको सन्तुष्टि (१–५)',
+        
+      ]
+    }, {
+      id: 'transport',
+      icon: 'car',
+      name: 'यातायात व्यवस्था कार्यालय',
+      tag: 'लाइसेन्स, नम्बर प्लेट, फिटनेस',
+      q: [
+        '१. सवारी चालक अनुमतिपत्र (लाइसेन्स) को परीक्षा प्रक्रिया सरल थियो ?',
+        '२. इम्बोस्ड नम्बर प्लेट/फिटनेसको काम समयमै भयो ?',
+        '३. कर्मचारीको व्यवहार व्यावसायिक थियो ?',
+        '४. अनलाइन आवेदन/ट्रायलको मिति प्राप्ति सहज थियो ?',
+        '५. ट्रायल/परीक्षाको लागि पर्याप्त सुविधा थियो ?',
+        '६. शुल्क पारदर्शी र उचित थियो ?',
+        '७. सवारी दर्ता/नवीकरण प्रक्रिया सहज थियो ?',
+        '८. पालो व्यवस्थापन प्रभावकारी थियो ?',
+        '९. यातायात कार्यालयको सेवाको समग्र अनुभव (१–५)',
+        
+      ]
+    }, {
+      id: 'hospital',
+      icon: 'health',
+      name: 'स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)',
+      tag: 'उपचार, स्वास्थ्य सेवा',
+      q: [
+        '१. स्वास्थ्य संस्थामा पालो/टिकट प्रणाली सहज थियो ?',
+        '२. चिकित्सक/कर्मचारीको व्यवहार मैत्रीपूर्ण थियो ?',
+        '३. औषधि/उपचारको उपलब्धता पर्याप्त थियो ?',
+        '४. सेवा शुल्क/बिल पारदर्शी थियो ?',
+        '५. आपत्कालीन सेवा (Emergency) सहज उपलब्ध थियो ?',
+        '६. पूर्वाधार (भवन, शौचालय, बस्ने ठाउँ) सफा र सहज थियो ?',
+        '७. परामर्श/उपचारको समय पर्याप्त थियो ?',
+        '८. स्वास्थ्य बीमा/सुविधाको जानकारी स्पष्ट थियो ?',
+        '९. समग्र स्वास्थ्य सेवाको स्कोर (१–५)',
+        
+      ]
+    }, {
+      id: 'school',
+      icon: 'school',
+      name: 'शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)',
+      tag: 'भर्ना, छात्रवृत्ति, शैक्षिक सेवा',
+      q: [
+        '१. विद्यालय भर्ना/नाम दर्ता प्रक्रिया सहज थियो ?',
+        '२. शिक्षक/प्रशासनको व्यवहार राम्रो थियो ?',
+        '३. छात्रवृत्ति/अनुदानको जानकारी स्पष्ट थियो ?',
+        '४. विद्यालयको भौतिक सुविधा (पानी, शौचालय, पुस्तकालय) पर्याप्त थियो ?',
+        '५. पाठ्यक्रम र शिक्षण विधि प्रभावकारी थियो ?',
+        '६. No Objection Letter/Equivalence लिने प्रक्रिया सहज थियो ?',
+        '७. No Objection Letter/Equivalence लिनका लागि अतिरिक्त दस्तूर बुझाउनु परेन ?',
+        '८. No Objection Letter/Equivalence लिने प्रक्रिया पारदर्शी थियो ?',
+        '९. समग्र सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखाको स्कोर (१–५)',
+        
+      ]
+    }, {
+      id: 'electricity',
+      icon: 'bolt',
+      name: 'नेपाल विद्युत् प्राधिकरण',
+      tag: 'बिजुली जडान, महसुल',
+      q: [
+        '१. नयाँ लाइन/मिटर जडानको प्रक्रिया सहज थियो ?',
+        '२. महसुल भुक्तानी प्रणाली सरल र पारदर्शी थियो ?',
+        '३. विद्युत् आपूर्तिको गुणस्तर (भोल्टेज) राम्रो थियो ?',
+        '४. गुनासो/जडान समस्या समाधान समयमै भयो ?',
+        '५. कार्यालयको कर्मचारी व्यवहार सहयोगी थियो ?',
+        '६. महसुलको बिल स्पष्ट र सही थियो ?',
+        '७. अनलाइन महसुल तिर्ने/हेर्ने सुविधा प्रभावकारी थियो ?',
+        '८. लोडसेडिङ/अवरोधको समयमा सूचना प्रणाली प्रभावकारी थियो ?',
+        '९. विद्युत् सेवाको समग्र स्कोर (१–५)',
+        '१०. के तपाईं विद्युत् प्राधिकरणको सेवा सिफारिस गर्नुहुन्छ ?'
+      ]
+    }, {
+      id: 'water',
+      icon: 'ward', // using 'ward' icon for water as a placeholder; original index2 used fa-water
+      name: 'खानेपानी तथा ढल निकास (नेपाल खानेपानी संस्थान)',
+      tag: 'खानेपानी जडान, महसुल, ढल',
+      q: [
+        '१. खानेपानी जडान/धाराको प्रक्रिया सहज थियो ?',
+        '२. पानीको गुणस्तर र आपूर्ति भरपर्दो थियो ?',
+        '३. महसुल/दस्तुर उचित र स्पष्ट थियो ?',
+        '४. मर्मत/गुनासो समाधान समयमै भयो ?',
+        '५. कर्मचारीको सहयोगशीलता उचित थियो ?',
+        '६. बिल/रसिद प्रणाली पारदर्शी थियो ?',
+        '७. अनलाइन/मोबाइल भुक्तानी सेवा प्रभावकारी थियो ?',
+        '८. ढल/निकास सेवाको पहुँच उपलब्ध थियो ?',
+        '९. खानेपानी सेवाको समग्र स्कोर (१–५)',
+        '१०. के तपाईं खानेपानी सेवा सिफारिस गर्नुहुन्छ ?'
+      ]
+    }, {
+      id: 'police',
+      icon: 'police',
+      name: 'नेपाल प्रहरी',
+      tag: 'चारित्रिक प्रमाणपत्र, उजुरी दर्ता',
+      q: [
+        '१. चारित्रिक प्रमाणपत्र/उजुरी दर्ता प्रक्रिया सहज थियो ?',
+        '२. प्रहरी कर्मचारीको व्यवहार व्यावसायिक थियो ?',
+        '३. सेवा समयमै प्राप्त भयो ?',
+        '४. शुल्क पारदर्शी थियो ?',
+        '५. उजुरी दर्ता गर्ने प्रणाली प्रभावकारी थियो ?',
+        '६. अनलाइन सेवा उपलब्ध थियो ?',
+        '७. कागजातको सूची स्पष्ट थियो ?',
+        '८. प्रहरी कार्यालयको वातावरण सहज थियो ?',
+        '९. समग्र प्रहरी सेवाको स्कोर (१–५)',
+        
+      ]
+    }, {
+      id: 'local_level',
+      icon: 'tree',
+      name: 'स्थानीय तह (पालिका/वडा कार्यालय)',
+      tag: 'सिफारिस, नक्सापास, व्यक्तिगत घटना दर्ता, सामाजिक सुरक्षा आदि',
+      q: [
+        '१. सिफारिस, नक्सापास, व्यक्तिगत घटना दर्ता, सामाजिक सुरक्षा आदिको प्रक्रिया सहज थियो ?',
+        '२. तोकिएको समयभित्रै सेवा पाउनुभयो ?',
+        '३. सेवा शुल्क सम्बन्धी जानकारी सूचना पाटी, नागरिक बडापत्र वा वेबसाइटमा स्पष्ट रुपमा राखिएको थियो ?',
+        '४. आवश्यक पर्ने कागजातको जानकारी कर्मचारीले अग्रिमरुपमा दिए ?',
+        '५. शुल्क/दस्तुर उचित थियो ?',
+        '६. सेवा प्राप्त गर्न अतिरिक्त रकम दिनु परेन ?',
+        '७. अनलाइन र डिजिटल सुविधा उपलब्ध र प्रयोगयोग्य थियो ?',
+        '८. गुनासो व्यवस्थापन प्रभावकारी थियो ?',
+        '९. स्थानीय तह सेवाको समग्र स्कोर (१–५)',
+        
+      ]
+    }];
+
+    // ----- render offices -----
+    const root = document.getElementById('officesRoot');
+
+    OFFICES.forEach((off, oi) => {
+      const details = document.createElement('details');
+      details.className = 'office';
+      details.dataset.office = off.id;
+
+      const summary = document.createElement('summary');
+      summary.innerHTML = `
+        <span class="icon-badge"><svg width="22" height="22" viewBox="0 0 32 32">${ICONS[off.icon] || ICONS.doc}</svg></span>
+        <span class="office-title">
+          <h2>${off.name}</h2>
+          <small>${off.tag}</small>
+        </span>
+        <span class="chev">+</span>
+      `;
+      details.appendChild(summary);
+
+      const qwrap = document.createElement('div');
+      qwrap.className = 'qwrap';
+
+      off.q.forEach((item, qi) => {
+        const row = document.createElement('div');
+        row.className = 'qrow';
+        const name = `${off.id}_q${qi+1}`;
+        // Determine if it's a grade question (contains '१–५' or 'स्कोर' or 'गुणस्तर' or 'सन्तुष्टि')
+        const isGrade = /(१–५|स्कोर|गुणस्तर|सन्तुष्टि)/.test(item);
+        let controlHtml = '';
+        if (!isGrade) {
+          controlHtml = `
+            <label class="pill yes"><input type="radio" name="${name}" value="हो" onchange="updateProgress()"><span>हो</span></label>
+            <label class="pill no"><input type="radio" name="${name}" value="होइन" onchange="updateProgress()"><span>होइन</span></label>
+          `;
+        } else {
+          controlHtml = [1, 2, 3, 4, 5].map(v =>
+            `<label class="pill"><input type="radio" name="${name}" value="${v}" onchange="updateProgress()"><span>${v}</span></label>`
+          ).join('') +
+            `<div class="grade-labels"><span>असन्तुष्ट</span><span>सन्तुष्ट</span></div>`;
+        }
+        row.innerHTML = `
+          <span class="qnum">${String(qi+1).padStart(2,'0')}</span>
+          <span class="qtext">${item}</span>
+          <span class="qcontrol">${controlHtml}</span>
+        `;
+        qwrap.appendChild(row);
+      });
+
+      details.appendChild(qwrap);
+
+      // notes (problem + suggestion)
+      const notes = document.createElement('div');
+      notes.className = 'office-notes';
+      notes.innerHTML = `
+        <div class="office-note-block">
+          <label for="${off.id}_problem">सेवा लिंदा कुनै समस्या भोग्नुपरेको भए उल्लेख गर्नुहोस्।</label>
+          <textarea id="${off.id}_problem" placeholder="समस्या उल्लेख गर्नुहोस्..."></textarea>
+        </div>
+        <div class="office-note-block">
+          <label for="${off.id}_suggestion">यस कार्यालयको सेवा सुधारका लागि सुझाव भए उल्लेख गर्नुहोस्।</label>
+          <textarea id="${off.id}_suggestion" placeholder="सुझाव लेख्नुहोस्..."></textarea>
+        </div>
+      `;
+      details.appendChild(notes);
+
+      const actions = document.createElement('div');
+      actions.className = 'office-actions';
+      actions.innerHTML = `<button type="button" class="mini-btn" onclick="clearOffice('${off.id}')">यो खण्ड खाली गर्नुहोस्</button>`;
+      details.appendChild(actions);
+
+      root.appendChild(details);
+    });
+
+    // ----- helper functions -----
+    function toggleAll(open) {
+      document.querySelectorAll('.office').forEach(d => d.open = open);
+    }
+
+    function clearOffice(id) {
+      const d = document.querySelector(`.office[data-office="${id}"]`);
+      d.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+      d.querySelectorAll('textarea').forEach(t => t.value = '');
+      updateProgress();
+    }
+
+    const TOTAL = OFFICES.length * 10;
+
+    function updateProgress() {
+      let answered = 0;
+      OFFICES.forEach(off => {
+        off.q.forEach((item, qi) => {
+          const name = `${off.id}_q${qi+1}`;
+          if (document.querySelector(`input[name="${name}"]:checked`)) answered++;
+        });
+      });
+      const pct = Math.round((answered / TOTAL) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = toDevanagari(answered) + ' / ' + toDevanagari(TOTAL) +
+        ' प्रश्न भरियो (' + toDevanagari(pct) + '%)';
+    }
+
+    function toDevanagari(n) {
+      const map = { '0': '०', '1': '१', '2': '२', '3': '३', '4': '४', '5': '५', '6': '६', '7': '७', '8': '८', '9': '९' };
+      return String(n).split('').map(c => map[c] !== undefined ? map[c] : c).join('');
+    }
+
+    // Replace this URL with your deployed Google Apps Script Web App URL
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8HdpgkQveFRofvf1qM0z6Kwiu3A0-D3bnF5U087KV8lkSUGs8KaSWdLPCzsCLN6TC6A/exec';
+
+    function submitForm() {
+      const summary = {};
+      let answered = 0;
+      OFFICES.forEach(off => {
+        const answers = {};
+        off.q.forEach((item, qi) => {
+          const name = `${off.id}_q${qi+1}`;
+          const checked = document.querySelector(`input[name="${name}"]:checked`);
+          if (checked) { answered++;
+            answers['q' + (qi + 1)] = checked.value; }
+        });
+        const officeProblem = document.getElementById(`${off.id}_problem`)?.value.trim() || '';
+        const officeSuggestion = document.getElementById(`${off.id}_suggestion`)?.value.trim() || '';
+        if (officeProblem) answers['समस्या'] = officeProblem;
+        if (officeSuggestion) answers['सुझाव'] = officeSuggestion;
+        if (Object.keys(answers).length) {
+          summary[off.name] = answers;
+        }
+      });
+
+      const suggestion = document.getElementById('finalSuggestion').value.trim();
+      const box = document.getElementById('result');
+      if (answered === 0 && suggestion === '') {
+        box.className = 'show';
+        box.innerHTML = `<h3>कुनै जवाफ भरिएको छैन</h3><p>कृपया कम्तिमा एउटा खण्ड खोलेर प्रश्नहरूको जवाफ दिनुहोस्।</p>`;
+        return;
+      }
+
+      const meta = {
+        जिल्ला_स्थानीय_तह: document.querySelectorAll('.meta-field input')[0].value,
+        उमेर_समूह: document.querySelectorAll('.meta-field input')[1].value,
+        मिति: document.getElementById('nepali-datepicker').value,
+        सेवा_सुधार_सुझाव: suggestion
+      };
+      const payload = { मेटाडाटा: meta, जवाफहरू: summary };
+
+      // Send data to Google Apps Script
+      box.className = 'show';
+      box.innerHTML = `<h3>डाटा पठाउँदै...</h3><p>कृपया केही क्षण पर्खनुहोस्।</p>`;
+
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        // Also provide download option
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        box.innerHTML = `
+          <h3>धन्यवाद! तपाईंको प्रतिक्रिया संकलन भयो।</h3>
+          <p>कुल ${toDevanagari(answered)} प्रश्नको जवाफ भरिएको छ, ${toDevanagari(Object.keys(summary).length)} वटा कार्यालय/निकाय समेटिएको छ।</p>
+          <p>डाटा Google Sheets मा सेभ भयो।</p>
+          <p><a href="${url}" download="sewa_santusti_jawaph.json">जवाफहरूको JSON फाइल डाउनलोड गर्नुहोस्</a></p>
+        `;
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Clear form after successful submission
+        clearAllOffices();
+        document.getElementById('finalSuggestion').value = '';
+        document.querySelectorAll('.meta-field input').forEach(input => input.value = '');
+        document.getElementById('nepali-datepicker').value = '';
+        updateProgress();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Fallback to download only if API fails
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        box.innerHTML = `
+          <h3>धन्यवाद! तपाईंको प्रतिक्रिया संकलन भयो।</h3>
+          <p>कुल ${toDevanagari(answered)} प्रश्नको जवाफ भरिएको छ, ${toDevanagari(Object.keys(summary).length)} वटा कार्यालय/निकाय समेटिएको छ।</p>
+          <p style="color: var(--crimson);">डाटा सर्भरमा पठाउन सकिएन। कृपया Apps Script URL कन्फिगर गर्नुहोस्।</p>
+          <p><a href="${url}" download="sewa_santusti_jawaph.json">जवाफहरूको JSON फाइल डाउनलोड गर्नुहोस्</a></p>
+        `;
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+
+    function clearAllOffices() {
+      OFFICES.forEach(off => {
+        clearOffice(off.id);
+      });
+    }
+
+    function openDashboard() {
+      window.open('login.html', '_blank');
+    }
+
+    // Initialize Nepali Date Picker
+    new NepaliDatePicker('#nepali-datepicker', {
+      format: 'YYYY-MM-DD',
+      mode: 'basic',
+      locale: 'np',
+      theme: 'flat'
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
