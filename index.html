@@ -889,7 +889,40 @@
         </div>
         <div class="meta-field">
           <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवाग्राहीको उमेर समूह</label>
-          <input type="text" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px;" placeholder="जस्तै: १८-३०" />
+          <select id="ageGroup" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px; width: 100%;">
+            <option value="">उमेर समूह छान्नुहोस्</option>
+            <option value="२५ वर्षभन्दा कम">२५ वर्षभन्दा कम</option>
+            <option value="२६-४० वर्ष">२६-४० वर्ष</option>
+            <option value="४१-५५ वर्ष">४१-५५ वर्ष</option>
+            <option value="५५ वर्षभन्दा बढी">५५ वर्षभन्दा बढी</option>
+          </select>
+        </div>
+        <div class="meta-field" style="position: relative;">
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">उत्तरदाताको पेशा</label>
+          <select id="profession" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px; width: 100%;" onchange="toggleProfessionOther()">
+            <option value="">पेशा छान्नुहोस्</option>
+            <option value="कृषक">कृषक</option>
+            <option value="विद्यार्थी">विद्यार्थी</option>
+            <option value="शिक्षक/प्राध्यापक">शिक्षक/प्राध्यापक</option>
+            <option value="सरकारी कर्मचारी">सरकारी कर्मचारी</option>
+            <option value="निजी क्षेत्रका कर्मचारी">निजी क्षेत्रका कर्मचारी</option>
+            <option value="उद्योगी">उद्योगी</option>
+            <option value="व्यवसायी/व्यापारी">व्यवसायी/व्यापारी</option>
+            <option value="उद्यमी (स्टार्टअप/साना तथा मझौला उद्यम)">उद्यमी (स्टार्टअप/साना तथा मझौला उद्यम)</option>
+            <option value="कानून व्यवसायी">कानून व्यवसायी</option>
+            <option value="लेखापाल/चार्टर्ड एकाउन्टेन्ट">लेखापाल/चार्टर्ड एकाउन्टेन्ट</option>
+            <option value="इन्जिनियर">इन्जिनियर</option>
+            <option value="डाक्टर/स्वास्थ्यकर्मी">डाक्टर/स्वास्थ्यकर्मी</option>
+            <option value="बैंक तथा वित्तीय संस्थाका कर्मचारी">बैंक तथा वित्तीय संस्थाका कर्मचारी</option>
+            <option value="पत्रकार/सञ्चारकर्मी">पत्रकार/सञ्चारकर्मी</option>
+            <option value="श्रमिक/मजदुर">श्रमिक/मजदुर</option>
+            <option value="वैदेशिक रोजगारीमा जाने श्रमिक">वैदेशिक रोजगारीमा जाने श्रमिक</option>
+            <option value="गृहिणी">गृहिणी</option>
+            <option value="सेवानिवृत्त कर्मचारी">सेवानिवृत्त कर्मचारी</option>
+            <option value="बेरोजगार">बेरोजगार</option>
+            <option value="अन्य">अन्य</option>
+          </select>
+          <input type="text" id="professionOther" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px; margin-top: 8px; display: none;" placeholder="उल्लेख गर्नुहोस्" />
         </div>
         <div class="meta-field" style="position: relative;">
           <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवा लिएको मिति</label>
@@ -1337,6 +1370,18 @@
       }
     }
 
+    function toggleProfessionOther() {
+      const select = document.getElementById('profession');
+      const otherField = document.getElementById('professionOther');
+      if (select.value === 'अन्य') {
+        otherField.style.display = 'block';
+        otherField.focus();
+      } else {
+        otherField.style.display = 'none';
+        otherField.value = '';
+      }
+    }
+
     function clearOffice(id) {
       const d = document.querySelector(`.office[data-office="${id}"]`);
       d.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
@@ -1366,7 +1411,7 @@
     }
 
     // Replace this URL with your deployed Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6dgalxlCh9AQH_-5s48fU_0qCdAODbCzp3meL0xLbMEcygwMs-qe1GYrZR28LLmC5pA/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx885OFPHkK7-SabPp5igoV4LIjD6dibBYq9e1T1oeHJ-fdRqFWo9QVX3vgJGF5QarQHA/exec';
 
     function submitForm() {
       const summary = {};
@@ -1422,9 +1467,14 @@
         return;
       }
 
+      const professionSelect = document.getElementById('profession');
+      const professionValue = professionSelect.value === 'अन्य' ? document.getElementById('professionOther').value.trim() : professionSelect.value;
+      const ageGroupSelect = document.getElementById('ageGroup');
+
       const meta = {
         जिल्ला_स्थानीय_तह: document.querySelectorAll('.meta-field input')[0].value,
-        उमेर_समूह: document.querySelectorAll('.meta-field input')[1].value,
+        उमेर_समूह: ageGroupSelect.value || '',
+        पेशा: professionValue || '',
         मिति: toDevanagari(document.getElementById('nepali-datepicker').value),
         सेवा_सुधार_सुझाव: suggestion,
         राम्रो_सेवा_कार्यालयहरू: goodOffices.join(', '),

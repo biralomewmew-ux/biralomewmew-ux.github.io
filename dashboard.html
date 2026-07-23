@@ -83,6 +83,36 @@
             <label>उमेर समूह</label>
             <select id="ageGroupFilter">
               <option value="all">सबै</option>
+              <option value="२५ वर्षभन्दा कम">२५ वर्षभन्दा कम</option>
+              <option value="२६-४० वर्ष">२६-४० वर्ष</option>
+              <option value="४१-५५ वर्ष">४१-५५ वर्ष</option>
+              <option value="५५ वर्षभन्दा बढी">५५ वर्षभन्दा बढी</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>उत्तरदाताको पेशा</label>
+            <select id="professionFilter">
+              <option value="all">सबै पेशा</option>
+              <option value="कृषक">कृषक</option>
+              <option value="विद्यार्थी">विद्यार्थी</option>
+              <option value="शिक्षक/प्राध्यापक">शिक्षक/प्राध्यापक</option>
+              <option value="सरकारी कर्मचारी">सरकारी कर्मचारी</option>
+              <option value="निजी क्षेत्रका कर्मचारी">निजी क्षेत्रका कर्मचारी</option>
+              <option value="उद्योगी">उद्योगी</option>
+              <option value="व्यवसायी/व्यापारी">व्यवसायी/व्यापारी</option>
+              <option value="उद्यमी (स्टार्टअप/साना तथा मझौला उद्यम)">उद्यमी (स्टार्टअप/साना तथा मझौला उद्यम)</option>
+              <option value="कानून व्यवसायी">कानून व्यवसायी</option>
+              <option value="लेखापाल/चार्टर्ड एकाउन्टेन्ट">लेखापाल/चार्टर्ड एकाउन्टेन्ट</option>
+              <option value="इन्जिनियर">इन्जिनियर</option>
+              <option value="डाक्टर/स्वास्थ्यकर्मी">डाक्टर/स्वास्थ्यकर्मी</option>
+              <option value="बैंक तथा वित्तीय संस्थाका कर्मचारी">बैंक तथा वित्तीय संस्थाका कर्मचारी</option>
+              <option value="पत्रकार/सञ्चारकर्मी">पत्रकार/सञ्चारकर्मी</option>
+              <option value="श्रमिक/मजदुर">श्रमिक/मजदुर</option>
+              <option value="वैदेशिक रोजगारीमा जाने श्रमिक">वैदेशिक रोजगारीमा जाने श्रमिक</option>
+              <option value="गृहिणी">गृहिणी</option>
+              <option value="सेवानिवृत्त कर्मचारी">सेवानिवृत्त कर्मचारी</option>
+              <option value="बेरोजगार">बेरोजगार</option>
+              <option value="अन्य">अन्य</option>
             </select>
           </div>
           <div class="filter-group">
@@ -199,6 +229,13 @@
           <h3>उमेर समूह वितरण</h3>
           <canvas id="ageGroupChart"></canvas>
         </div>
+        <div class="chart-container">
+          <h3>पेशा अनुसार प्रतिक्रिया</h3>
+          <canvas id="professionChart"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-section">
         <div class="chart-container">
           <h3>जिल्ला अनुसार प्रतिक्रिया</h3>
           <canvas id="districtChart"></canvas>

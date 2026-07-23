@@ -1,6 +1,6 @@
 // Dashboard JavaScript for Customer Survey
 // Replace this URL with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6dgalxlCh9AQH_-5s48fU_0qCdAODbCzp3meL0xLbMEcygwMs-qe1GYrZR28LLmC5pA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx885OFPHkK7-SabPp5igoV4LIjD6dibBYq9e1T1oeHJ-fdRqFWo9QVX3vgJGF5QarQHA/exec';
 
 // Pagination state
 let currentPage = 1;
@@ -153,7 +153,7 @@ const OFFICES = [{
 }];
 
 // Global variables for charts
-let officeChart, satisfactionChart, ageGroupChart, districtChart, goodOfficeChart, badOfficeChart;
+let officeChart, satisfactionChart, ageGroupChart, professionChart, districtChart, goodOfficeChart, badOfficeChart;
 let currentData = [];
 
 function toNepaliDigits(value) {
@@ -408,6 +408,7 @@ function updateCharts(data, stats) {
   if (officeChart) officeChart.destroy();
   if (satisfactionChart) satisfactionChart.destroy();
   if (ageGroupChart) ageGroupChart.destroy();
+  if (professionChart) professionChart.destroy();
   if (districtChart) districtChart.destroy();
   if (goodOfficeChart) goodOfficeChart.destroy();
   if (badOfficeChart) badOfficeChart.destroy();
@@ -543,7 +544,44 @@ function updateCharts(data, stats) {
       }
     }
   });
-  
+
+  // Profession chart
+  const professionLabels = Object.keys(stats.professionStats || {}).slice(0, 10);
+  const professionData = professionLabels.map(profession => stats.professionStats[profession]);
+
+  const professionCtx = document.getElementById('professionChart').getContext('2d');
+  professionChart = new Chart(professionCtx, {
+    type: 'bar',
+    data: {
+      labels: professionLabels,
+      datasets: [{
+        label: 'प्रतिक्रियाहरू',
+        data: professionData,
+        backgroundColor: 'rgba(147, 51, 234, 0.7)',
+        borderColor: 'rgba(147, 51, 234, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
   // District chart
   const districtLabels = Object.keys(stats.districtStats || {}).slice(0, 10);
   const districtData = districtLabels.map(district => stats.districtStats[district]);
@@ -1020,20 +1058,8 @@ function changeItemsPerPage() {
 
 // Populate filter dropdowns
 function populateFilters(data) {
-  const ageGroups = [...new Set(data.map(row => row.ageGroup).filter(a => a))];
-  
-  const ageGroupFilter = document.getElementById('ageGroupFilter');
-  
-  // Clear existing options (except first)
-  ageGroupFilter.innerHTML = '<option value="all">सबै</option>';
-  
-  ageGroups.forEach(ageGroup => {
-    const option = document.createElement('option');
-    option.value = ageGroup;
-    option.textContent = ageGroup;
-    ageGroupFilter.appendChild(option);
-  });
-  
+  // Note: age group and profession filters have static options in HTML, no need to populate dynamically
+
   // Populate problem and suggestion filters
   populateProblemSuggestionFilters(data);
 }
@@ -1072,19 +1098,20 @@ async function applyFilters() {
   const localLevel = document.getElementById('localLevelFilter').value;
   const officeId = document.getElementById('officeFilter').value;
   const ageGroup = document.getElementById('ageGroupFilter').value;
-  
+  const profession = document.getElementById('professionFilter').value;
+
   // Use Nepali dates directly (BS format YYYY-MM-DD)
   const startDateInput = document.getElementById('startDate');
   const endDateInput = document.getElementById('endDate');
   const startDate = startDateInput.dataset.nepaliDate || startDateInput.value;
   const endDate = endDateInput.dataset.nepaliDate || endDateInput.value;
-  
+
   const questionFilter = document.getElementById('questionFilter').value;
   const problemFilter = document.getElementById('problemFilter').value;
   const suggestionFilter = document.getElementById('suggestionFilter').value;
   
   try {
-    const url = `${APPS_SCRIPT_URL}?action=getFilteredData&provinceId=${encodeURIComponent(provinceId)}&district=${encodeURIComponent(district)}&localLevel=${encodeURIComponent(localLevel)}&officeId=${encodeURIComponent(officeId)}&ageGroup=${encodeURIComponent(ageGroup)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&questionFilter=${encodeURIComponent(questionFilter)}&problemFilter=${encodeURIComponent(problemFilter)}&suggestionFilter=${encodeURIComponent(suggestionFilter)}`;
+    const url = `${APPS_SCRIPT_URL}?action=getFilteredData&provinceId=${encodeURIComponent(provinceId)}&district=${encodeURIComponent(district)}&localLevel=${encodeURIComponent(localLevel)}&officeId=${encodeURIComponent(officeId)}&ageGroup=${encodeURIComponent(ageGroup)}&profession=${encodeURIComponent(profession)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&questionFilter=${encodeURIComponent(questionFilter)}&problemFilter=${encodeURIComponent(problemFilter)}&suggestionFilter=${encodeURIComponent(suggestionFilter)}`;
     const response = await fetch(url);
     const result = await response.json();
     
@@ -1104,6 +1131,7 @@ function resetFilters() {
   document.getElementById('localLevelFilter').innerHTML = '<option value="all">सबै स्थानीय तह</option>';
   document.getElementById('officeFilter').value = 'all';
   document.getElementById('ageGroupFilter').value = 'all';
+  document.getElementById('professionFilter').value = 'all';
   document.getElementById('startDate').value = '';
   document.getElementById('startDate').dataset.nepaliDate = '';
   document.getElementById('endDate').value = '';

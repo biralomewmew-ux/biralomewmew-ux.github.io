@@ -27,6 +27,7 @@ function setupSheet() {
       "Timestamp",
       "District_Local_Level",
       "Age_Group",
+      "Profession",
       "Service_Date",
       "Final_Suggestion",
       "Good_Offices",
@@ -52,6 +53,10 @@ function setupSheet() {
   } else {
     // Check if new columns need to be added to existing sheet
     const currentHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (!currentHeaders.includes("Profession")) {
+      sheet.insertColumns(4, 1);
+      sheet.getRange(1, 4).setValue("Profession");
+    }
     if (!currentHeaders.includes("Good_Offices")) {
       sheet.insertColumns(6, 2);
       sheet.getRange(1, 6).setValue("Good_Offices");
@@ -84,6 +89,7 @@ function saveSurveyData(data) {
       timestamp,
       metadata.जिल्ला_स्थानीय_तह || "",
       metadata.उमेर_समूह || "",
+      metadata.पेशा || "",
       normalizedServiceDate,
       metadata.सेवा_सुधार_सुझाव || "",
       metadata.राम्रो_सेवा_कार्यालयहरू || "",
@@ -149,24 +155,25 @@ function getDashboardData() {
     timestamp: row[0],
     district: row[1],
     ageGroup: row[2],
-    serviceDate: row[3],
-    finalSuggestion: row[4],
-    goodOffices: row[5] || "",
-    badOffices: row[6] || "",
-    officeId: row[7],
-    officeName: row[8],
-    q1: row[9],
-    q2: row[10],
-    q3: row[11],
-    q4: row[12],
-    q5: row[13],
-    q6: row[14],
-    q7: row[15],
-    q8: row[16],
-    q9: row[17],
-    q10: row[18],
-    problem: row[19],
-    suggestion: row[20]
+    profession: row[3] || "",
+    serviceDate: row[4],
+    finalSuggestion: row[5],
+    goodOffices: row[6] || "",
+    badOffices: row[7] || "",
+    officeId: row[8],
+    officeName: row[9],
+    q1: row[10],
+    q2: row[11],
+    q3: row[12],
+    q4: row[13],
+    q5: row[14],
+    q6: row[15],
+    q7: row[16],
+    q8: row[17],
+    q9: row[18],
+    q10: row[19],
+    problem: row[20],
+    suggestion: row[21]
   }));
   
   // Calculate statistics
@@ -181,6 +188,7 @@ function calculateStatistics(data) {
   const officeStats = {};
   const districtStats = {};
   const ageGroupStats = {};
+  const professionStats = {};
   const satisfactionScores = {};
   const goodOfficeStats = {};
   const badOfficeStats = {};
@@ -206,6 +214,11 @@ function calculateStatistics(data) {
     // Count by age group
     if (row.ageGroup) {
       ageGroupStats[row.ageGroup] = (ageGroupStats[row.ageGroup] || 0) + 1;
+    }
+
+    // Count by profession
+    if (row.profession) {
+      professionStats[row.profession] = (professionStats[row.profession] || 0) + 1;
     }
 
     // Count good offices
@@ -241,6 +254,7 @@ function calculateStatistics(data) {
     officeStats,
     districtStats,
     ageGroupStats,
+    professionStats,
     satisfactionScores,
     goodOfficeStats,
     badOfficeStats
@@ -281,7 +295,11 @@ function getFilteredData(filters) {
   if (filters.ageGroup && filters.ageGroup !== "all") {
     filteredData = filteredData.filter(row => row.ageGroup === filters.ageGroup);
   }
-  
+
+  if (filters.profession && filters.profession !== "all") {
+    filteredData = filteredData.filter(row => row.profession === filters.profession);
+  }
+
   if (filters.startDate) {
     filteredData = filteredData.filter(row => {
       // Compare with service date (BS format YYYY-MM-DD)
