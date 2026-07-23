@@ -37,6 +37,11 @@
           <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>          
         </div>
       </div>
+      <button class="refresh-btn" onclick="loadDashboardData()" title="डाटा रिफ्रेस गर्नुहोस्">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+        </svg>
+      </button>
       <button class="logout-btn" onclick="logout()" title="लगआउट">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -92,9 +97,9 @@
             </select>
           </div>
           <div class="filter-group">
-            <label>उत्तरदाताको पेशा</label>
+            <label>पेशा</label>
             <select id="professionFilter">
-              <option value="all">सबै पेशा</option>
+              <option value="all">सबै पेशाहरू</option>
               <option value="कृषक">कृषक</option>
               <option value="विद्यार्थी">विद्यार्थी</option>
               <option value="शिक्षक/प्राध्यापक">शिक्षक/प्राध्यापक</option>
@@ -146,11 +151,9 @@
           <div class="filter-group">
             <label>&nbsp;</label>
             <button class="filter-btn" onclick="applyFilters()">फिल्टर गर्नुहोस्</button>
-            <!-- <button class="reset-btn" onclick="resetFilters()">रिसेट गर्नुहोस्</button> -->
           </div>
           <div class="filter-group">
             <label>&nbsp;</label>
-            <!-- <button class="filter-btn" onclick="applyFilters()">फिल्टर गर्नुहोस्</button> -->
             <button class="reset-btn" onclick="resetFilters()">रिसेट गर्नुहोस्</button>
           </div>
         </div>
@@ -234,7 +237,23 @@
         </div>
         <div class="chart-container map-container">
           <h3>जिल्लागत विवरण-नक्सामा</h3>
-          <div id="districtMap" style="height: 400px; width: 100%;"></div>
+          <div style="position: relative; height: 400px; width: 100%;">
+            <div id="districtMap" style="height: 100%; width: 100%;"></div>
+            <div id="mapLoader" class="map-loader hidden">
+              <div class="spinner"></div>
+              <span>नक्सा लोड हुँदैछ...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trend Line Chart -->
+      <div class="charts-section full-width">
+        <div class="chart-container">
+          <h3>मिति अनुसार प्रतिक्रियाको प्रवृत्ति (Response Trend over Time)</h3>
+          <div style="height: 240px; width: 100%;">
+            <canvas id="trendChart"></canvas>
+          </div>
         </div>
       </div>
 

@@ -783,3 +783,75 @@ tbody tr:hover {
   border-radius: 2px;
   font-weight: 600;
 }
+
+/* Header Refresh Button */
+.refresh-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1.5px solid var(--indigo);
+  background: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+  box-shadow: 0 2px 8px rgba(12, 55, 104, 0.12);
+}
+.refresh-btn:hover {
+  background: var(--indigo);
+}
+.refresh-btn:hover svg {
+  stroke: #fff;
+}
+.refresh-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--indigo);
+  transition: stroke 0.2s ease;
+}
+
+/* Full Width Charts Layout Override */
+.charts-section.full-width {
+  grid-template-columns: 1fr;
+}
+
+/* Map Loader Spinner Overlay */
+.map-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: "Mukta", "Kalimati", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--indigo);
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  border-radius: 8px;
+}
+.map-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(12, 55, 104, 0.15);
+  border-top-color: var(--indigo);
+  border-radius: 50%;
+  animation: map-spin 0.8s linear infinite;
+}
+@keyframes map-spin {
+  to { transform: rotate(360deg); }
+}

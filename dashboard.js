@@ -169,7 +169,7 @@ const OFFICES = [{
 }];
 
 // Global variables for charts
-let officeChart, satisfactionChart, ageGroupChart, professionChart, districtChart, goodOfficeChart, badOfficeChart;
+let officeChart, satisfactionChart, ageGroupChart, professionChart, districtChart, goodOfficeChart, badOfficeChart, trendChart;
 let currentData = [];
 
 function toNepaliDigits(value) {
@@ -465,6 +465,65 @@ function updateCharts(data, stats) {
   if (districtChart) districtChart.destroy();
   if (goodOfficeChart) goodOfficeChart.destroy();
   if (badOfficeChart) badOfficeChart.destroy();
+  if (trendChart) trendChart.destroy();
+
+  // 0. Time Trend Chart (Response Trend over Time)
+  const dateCounts = {};
+  data.forEach(row => {
+    const date = row.serviceDate || new Date(row.timestamp).toLocaleDateString('ne-NP');
+    dateCounts[date] = (dateCounts[date] || 0) + 1;
+  });
+
+  const sortedDates = Object.keys(dateCounts).sort((a, b) => a.localeCompare(b));
+  const trendData = sortedDates.map(date => dateCounts[date]);
+
+  const trendCtx = document.getElementById('trendChart').getContext('2d');
+  const trendGrad = trendCtx.createLinearGradient(0, 0, 0, 200);
+  trendGrad.addColorStop(0, 'rgba(12, 55, 104, 0.4)');
+  trendGrad.addColorStop(1, 'rgba(12, 55, 104, 0.02)');
+
+  trendChart = new Chart(trendCtx, {
+    type: 'line',
+    data: {
+      labels: sortedDates.map(d => toNepaliDigits(d)),
+      datasets: [{
+        label: 'दैनिक प्रतिक्रिया संख्या',
+        data: trendData,
+        borderColor: 'rgba(12, 55, 104, 1)',
+        borderWidth: 2.5,
+        backgroundColor: trendGrad,
+        fill: true,
+        tension: 0.35,
+        pointBackgroundColor: 'rgba(12, 55, 104, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
   
   // Office responses chart (Indigo Theme)
   const officeLabels = Object.keys(stats.officeStats || {});
@@ -931,9 +990,13 @@ function updateDistrictMap(data, stats) {
   console.log('District scores calculated:', districtScores);
   console.log('District averages:', districtAverages);
 
+  const loader = document.getElementById('mapLoader');
+  if (loader) loader.classList.remove('hidden');
+
   fetch('https://raw.githubusercontent.com/mesaugat/geoJSON-Nepal/master/nepal-districts-new.geojson')
     .then(response => response.json())
     .then(geojson => {
+      if (loader) loader.classList.add('hidden');
       districtMap.eachLayer(layer => {
         if (layer instanceof L.GeoJSON) {
           districtMap.removeLayer(layer);
@@ -971,6 +1034,7 @@ function updateDistrictMap(data, stats) {
       }).addTo(districtMap);
     })
     .catch(error => {
+      if (loader) loader.classList.add('hidden');
       console.error('Error loading GeoJSON:', error);
     });
 }
