@@ -6,6 +6,8 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx885OFPHkK7-Sa
 let currentPage = 1;
 let itemsPerPage = 20;
 let tableData = [];
+let sortColumn = '';
+let sortAscending = true;
 
 const CHART_FONT_FAMILY = '"Mukta", "Kalimati", "Noto Sans Devanagari", Arial, sans-serif';
 const CHART_LEGEND_LABELS = {
@@ -183,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeNepaliDatePicker();
   initializeCollapsibleSections();
   loadDashboardData();
+  updateSortIcons();
 });
 
 function initializeCollapsibleSections() {
@@ -463,11 +466,19 @@ function updateCharts(data, stats) {
   if (goodOfficeChart) goodOfficeChart.destroy();
   if (badOfficeChart) badOfficeChart.destroy();
   
-  // Office responses chart
+  // Office responses chart (Indigo Theme)
   const officeLabels = Object.keys(stats.officeStats || {});
   const officeData = officeLabels.map(office => stats.officeStats[office].count);
   
   const officeCtx = document.getElementById('officeChart').getContext('2d');
+  const officeGrad = officeCtx.createLinearGradient(0, 200, 0, 0);
+  officeGrad.addColorStop(0, 'rgba(12, 55, 104, 0.15)');
+  officeGrad.addColorStop(1, 'rgba(12, 55, 104, 0.85)');
+
+  const officeHoverGrad = officeCtx.createLinearGradient(0, 200, 0, 0);
+  officeHoverGrad.addColorStop(0, 'rgba(12, 55, 104, 0.4)');
+  officeHoverGrad.addColorStop(1, 'rgba(12, 55, 104, 1)');
+
   officeChart = new Chart(officeCtx, {
     type: 'bar',
     data: {
@@ -475,9 +486,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'प्रतिक्रियाहरू',
         data: officeData,
-        backgroundColor: 'rgba(12, 55, 104, 0.7)',
+        backgroundColor: officeGrad,
         borderColor: 'rgba(12, 55, 104, 1)',
-        borderWidth: 1
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: officeHoverGrad,
+        hoverBorderColor: 'rgba(12, 55, 104, 1)',
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -505,11 +520,48 @@ function updateCharts(data, stats) {
     }
   });
   
-  // Satisfaction scores chart
+  // Satisfaction scores chart (Vibrant Classified Colors)
   const satisfactionLabels = Object.keys(stats.satisfactionScores || {});
   const satisfactionData = satisfactionLabels.map(office => parseFloat(stats.satisfactionScores[office]) || 0);
   
   const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+
+  const satisfactionGradients = satisfactionData.map(score => {
+    const grad = satisfactionCtx.createLinearGradient(0, 200, 0, 0);
+    if (score >= 4) {
+      grad.addColorStop(0, 'rgba(34, 197, 94, 0.15)'); // Emerald Green
+      grad.addColorStop(1, 'rgba(34, 197, 94, 0.85)');
+    } else if (score >= 3) {
+      grad.addColorStop(0, 'rgba(245, 158, 11, 0.15)'); // Amber Yellow
+      grad.addColorStop(1, 'rgba(245, 158, 11, 0.85)');
+    } else {
+      grad.addColorStop(0, 'rgba(239, 68, 68, 0.15)'); // Rose Red
+      grad.addColorStop(1, 'rgba(239, 68, 68, 0.85)');
+    }
+    return grad;
+  });
+
+  const satisfactionHoverGradients = satisfactionData.map(score => {
+    const grad = satisfactionCtx.createLinearGradient(0, 200, 0, 0);
+    if (score >= 4) {
+      grad.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
+      grad.addColorStop(1, 'rgba(34, 197, 94, 1)');
+    } else if (score >= 3) {
+      grad.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
+      grad.addColorStop(1, 'rgba(245, 158, 11, 1)');
+    } else {
+      grad.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+      grad.addColorStop(1, 'rgba(239, 68, 68, 1)');
+    }
+    return grad;
+  });
+
+  const satisfactionBorders = satisfactionData.map(score => {
+    if (score >= 4) return 'rgba(34, 197, 94, 1)';
+    if (score >= 3) return 'rgba(245, 158, 11, 1)';
+    return 'rgba(239, 68, 68, 1)';
+  });
+
   satisfactionChart = new Chart(satisfactionCtx, {
     type: 'bar',
     data: {
@@ -517,17 +569,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'सन्तुष्टि स्कोर',
         data: satisfactionData,
-        backgroundColor: satisfactionData.map(score => {
-          if (score >= 4) return 'rgba(62, 122, 76, 0.7)';
-          if (score >= 3) return 'rgba(185, 133, 46, 0.7)';
-          return 'rgba(166, 24, 42, 0.7)';
-        }),
-        borderColor: satisfactionData.map(score => {
-          if (score >= 4) return 'rgba(62, 122, 76, 1)';
-          if (score >= 3) return 'rgba(185, 133, 46, 1)';
-          return 'rgba(166, 24, 42, 1)';
-        }),
-        borderWidth: 1
+        backgroundColor: satisfactionGradients,
+        borderColor: satisfactionBorders,
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: satisfactionHoverGradients,
+        hoverBorderColor: satisfactionBorders,
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -556,7 +604,7 @@ function updateCharts(data, stats) {
     }
   });
   
-  // Age group chart
+  // Age group chart (Elegant Donut with Slice Popout)
   const ageGroupLabels = Object.keys(stats.ageGroupStats || {});
   const ageGroupData = ageGroupLabels.map(group => stats.ageGroupStats[group]);
   
@@ -568,20 +616,21 @@ function updateCharts(data, stats) {
       datasets: [{
         data: ageGroupData,
         backgroundColor: [
-          'rgba(12, 55, 104, 0.7)',
-          'rgba(166, 24, 42, 0.7)',
-          'rgba(62, 122, 76, 0.7)',
-          'rgba(185, 133, 46, 0.7)',
-          'rgba(91, 86, 72, 0.7)'
+          'rgba(12, 55, 104, 0.8)',
+          'rgba(166, 24, 42, 0.8)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(147, 51, 234, 0.8)'
         ],
         borderColor: [
           'rgba(12, 55, 104, 1)',
           'rgba(166, 24, 42, 1)',
-          'rgba(62, 122, 76, 1)',
-          'rgba(185, 133, 46, 1)',
-          'rgba(91, 86, 72, 1)'
+          'rgba(34, 197, 94, 1)',
+          'rgba(245, 158, 11, 1)',
+          'rgba(147, 51, 234, 1)'
         ],
-        borderWidth: 1
+        borderWidth: 1.5,
+        hoverOffset: 8
       }]
     },
     options: {
@@ -596,11 +645,19 @@ function updateCharts(data, stats) {
     }
   });
 
-  // Profession chart
+  // Profession chart (Purple Gradient - Horizontal)
   const professionLabels = Object.keys(stats.professionStats || {}).slice(0, 10);
   const professionData = professionLabels.map(profession => stats.professionStats[profession]);
 
   const professionCtx = document.getElementById('professionChart').getContext('2d');
+  const professionGrad = professionCtx.createLinearGradient(0, 0, 300, 0);
+  professionGrad.addColorStop(0, 'rgba(147, 51, 234, 0.15)');
+  professionGrad.addColorStop(1, 'rgba(147, 51, 234, 0.85)');
+
+  const professionHoverGrad = professionCtx.createLinearGradient(0, 0, 300, 0);
+  professionHoverGrad.addColorStop(0, 'rgba(147, 51, 234, 0.4)');
+  professionHoverGrad.addColorStop(1, 'rgba(147, 51, 234, 1)');
+
   professionChart = new Chart(professionCtx, {
     type: 'bar',
     data: {
@@ -608,9 +665,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'प्रतिक्रियाहरू',
         data: professionData,
-        backgroundColor: 'rgba(147, 51, 234, 0.7)',
+        backgroundColor: professionGrad,
         borderColor: 'rgba(147, 51, 234, 1)',
-        borderWidth: 1
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: professionHoverGrad,
+        hoverBorderColor: 'rgba(147, 51, 234, 1)',
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -633,11 +694,19 @@ function updateCharts(data, stats) {
     }
   });
 
-  // District chart
+  // District chart (Gold/Amber Gradient - Horizontal)
   const districtLabels = Object.keys(stats.districtStats || {}).slice(0, 10);
   const districtData = districtLabels.map(district => stats.districtStats[district]);
 
   const districtCtx = document.getElementById('districtChart').getContext('2d');
+  const districtGrad = districtCtx.createLinearGradient(0, 0, 300, 0);
+  districtGrad.addColorStop(0, 'rgba(245, 158, 11, 0.15)');
+  districtGrad.addColorStop(1, 'rgba(245, 158, 11, 0.85)');
+
+  const districtHoverGrad = districtCtx.createLinearGradient(0, 0, 300, 0);
+  districtHoverGrad.addColorStop(0, 'rgba(245, 158, 11, 0.4)');
+  districtHoverGrad.addColorStop(1, 'rgba(245, 158, 11, 1)');
+
   districtChart = new Chart(districtCtx, {
     type: 'bar',
     data: {
@@ -645,9 +714,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'प्रतिक्रियाहरू',
         data: districtData,
-        backgroundColor: 'rgba(185, 133, 46, 0.7)',
-        borderColor: 'rgba(185, 133, 46, 1)',
-        borderWidth: 1
+        backgroundColor: districtGrad,
+        borderColor: 'rgba(245, 158, 11, 1)',
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: districtHoverGrad,
+        hoverBorderColor: 'rgba(245, 158, 11, 1)',
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -670,12 +743,20 @@ function updateCharts(data, stats) {
     }
   });
 
-  // Good offices chart
+  // Good offices chart (Emerald Green Gradient - Horizontal)
   const goodOfficeEntries = Object.entries(stats.goodOfficeStats || {}).sort((a, b) => b[1] - a[1]);
   const goodOfficeLabels = goodOfficeEntries.slice(0, 3).map(entry => entry[0]);
   const goodOfficeData = goodOfficeEntries.slice(0, 3).map(entry => entry[1]);
 
   const goodOfficeCtx = document.getElementById('goodOfficeChart').getContext('2d');
+  const goodOfficeGrad = goodOfficeCtx.createLinearGradient(0, 0, 300, 0);
+  goodOfficeGrad.addColorStop(0, 'rgba(34, 197, 94, 0.15)');
+  goodOfficeGrad.addColorStop(1, 'rgba(34, 197, 94, 0.85)');
+
+  const goodOfficeHoverGrad = goodOfficeCtx.createLinearGradient(0, 0, 300, 0);
+  goodOfficeHoverGrad.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
+  goodOfficeHoverGrad.addColorStop(1, 'rgba(34, 197, 94, 1)');
+
   goodOfficeChart = new Chart(goodOfficeCtx, {
     type: 'bar',
     data: {
@@ -683,9 +764,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'प्रतिक्रियाहरू',
         data: goodOfficeData,
-        backgroundColor: 'rgba(34, 197, 94, 0.7)',
+        backgroundColor: goodOfficeGrad,
         borderColor: 'rgba(34, 197, 94, 1)',
-        borderWidth: 1
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: goodOfficeHoverGrad,
+        hoverBorderColor: 'rgba(34, 197, 94, 1)',
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -708,12 +793,20 @@ function updateCharts(data, stats) {
     }
   });
 
-  // Bad offices chart
+  // Bad offices chart (Rose Red Gradient - Horizontal)
   const badOfficeEntries = Object.entries(stats.badOfficeStats || {}).sort((a, b) => b[1] - a[1]);
   const badOfficeLabels = badOfficeEntries.slice(0, 3).map(entry => entry[0]);
   const badOfficeData = badOfficeEntries.slice(0, 3).map(entry => entry[1]);
 
   const badOfficeCtx = document.getElementById('badOfficeChart').getContext('2d');
+  const badOfficeGrad = badOfficeCtx.createLinearGradient(0, 0, 300, 0);
+  badOfficeGrad.addColorStop(0, 'rgba(239, 68, 68, 0.15)');
+  badOfficeGrad.addColorStop(1, 'rgba(239, 68, 68, 0.85)');
+
+  const badOfficeHoverGrad = badOfficeCtx.createLinearGradient(0, 0, 300, 0);
+  badOfficeHoverGrad.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+  badOfficeHoverGrad.addColorStop(1, 'rgba(239, 68, 68, 1)');
+
   badOfficeChart = new Chart(badOfficeCtx, {
     type: 'bar',
     data: {
@@ -721,9 +814,13 @@ function updateCharts(data, stats) {
       datasets: [{
         label: 'प्रतिक्रियाहरू',
         data: badOfficeData,
-        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+        backgroundColor: badOfficeGrad,
         borderColor: 'rgba(239, 68, 68, 1)',
-        borderWidth: 1
+        borderWidth: 1.5,
+        borderRadius: 6,
+        hoverBackgroundColor: badOfficeHoverGrad,
+        hoverBorderColor: 'rgba(239, 68, 68, 1)',
+        hoverBorderWidth: 2
       }]
     },
     options: {
@@ -766,6 +863,33 @@ function updateDistrictMap(data, stats) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(districtMap);
+
+    // Add Legend Control
+    const legend = L.control({ position: 'topright' });
+    legend.onAdd = function() {
+      const div = L.DomUtil.create('div', 'info legend');
+      div.innerHTML = '<h4>सन्तुष्टि स्कोर</h4>';
+      
+      const grades = [4.5, 3.5, 2.5, 1.5, 1.0];
+      const labels = [
+        '४.५ - ५.० (धेरै राम्रो)',
+        '३.५ - ४.४ (सन्तुष्ट)',
+        '२.५ - ३.४ (मध्यम)',
+        '१.५ - २.४ (कमजोर)',
+        '१.० - १.४ (धेरै कमजोर)'
+      ];
+
+      for (let i = 0; i < grades.length; i++) {
+        div.innerHTML += `
+          <div class="legend-row">
+            <i style="background: ${getColorForScore(grades[i])}"></i>
+            <span>${labels[i]}</span>
+          </div>
+        `;
+      }
+      return div;
+    };
+    legend.addTo(districtMap);
   }
 
   const districtStats = stats.districtStats || {};
@@ -1014,27 +1138,130 @@ function renderTable() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const pageData = tableData.slice(startIndex, endIndex);
+  
+  const searchTerm = document.getElementById('tableSearch')?.value || '';
 
   tbody.innerHTML = pageData.map(row => {
     const date = row.serviceDate || new Date(row.timestamp).toLocaleDateString('ne-NP');
-    const score = row.q9 || row.q10 || 'N/A';
-    const problem = row.problem ? row.problem.substring(0, 50) + (row.problem.length > 50 ? '...' : '') : '-';
-    const suggestion = row.suggestion ? row.suggestion.substring(0, 50) + (row.suggestion.length > 50 ? '...' : '') : '-';
+    const scoreVal = row.q9 || row.q10 || 'N/A';
+    const scoreBadge = getScoreBadgeHtml(scoreVal);
+    
+    // Highlight matched text
+    const dateH = highlightText(date, searchTerm);
+    const officeH = highlightText(row.officeName, searchTerm);
+    const districtH = highlightText(row.district || '-', searchTerm);
+    const ageH = highlightText(row.ageGroup || '-', searchTerm);
+    
+    const rawProblem = row.problem || '';
+    const shortProblem = rawProblem ? rawProblem.substring(0, 50) + (rawProblem.length > 50 ? '...' : '') : '-';
+    const problemH = rawProblem ? highlightText(shortProblem, searchTerm) : '-';
+    
+    const rawSuggestion = row.suggestion || '';
+    const shortSuggestion = rawSuggestion ? rawSuggestion.substring(0, 50) + (rawSuggestion.length > 50 ? '...' : '') : '-';
+    const suggestionH = rawSuggestion ? highlightText(shortSuggestion, searchTerm) : '-';
 
     return `
       <tr>
-        <td>${date}</td>
-        <td>${row.officeName}</td>
-        <td>${row.district || '-'}</td>
-        <td>${row.ageGroup || '-'}</td>
-        <td>${score}</td>
-        <td>${problem}</td>
-        <td>${suggestion}</td>
+        <td>${dateH}</td>
+        <td>${officeH}</td>
+        <td>${districtH}</td>
+        <td>${ageH}</td>
+        <td>${scoreBadge}</td>
+        <td title="${rawProblem.replace(/"/g, '&quot;')}">${problemH}</td>
+        <td title="${rawSuggestion.replace(/"/g, '&quot;')}">${suggestionH}</td>
       </tr>
     `;
   }).join('');
 
   updatePaginationInfo();
+}
+
+// Highlight query text with <mark> tags for table searching
+function highlightText(text, term) {
+  if (!text) return '-';
+  if (!term) return text;
+  
+  const textStr = String(text);
+  const termStr = String(term).trim();
+  if (!termStr) return textStr;
+
+  try {
+    const escapedTerm = termStr.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(`(${escapedTerm})`, 'gi');
+    return textStr.replace(regex, '<mark class="table-highlight">$1</mark>');
+  } catch (e) {
+    return textStr;
+  }
+}
+
+// Generate colored HTML score badges
+function getScoreBadgeHtml(score) {
+  const num = parseFloat(score);
+  if (isNaN(num)) {
+    return `<span class="score-badge badge-gray">N/A</span>`;
+  }
+  const displayVal = toNepaliDigits(num);
+  if (num >= 4) {
+    return `<span class="score-badge badge-green">${displayVal}</span>`;
+  }
+  if (num >= 3) {
+    return `<span class="score-badge badge-yellow">${displayVal}</span>`;
+  }
+  return `<span class="score-badge badge-red">${displayVal}</span>`;
+}
+
+// Handle column sorting
+function sortTable(column) {
+  if (sortColumn === column) {
+    sortAscending = !sortAscending;
+  } else {
+    sortColumn = column;
+    sortAscending = true;
+  }
+
+  tableData.sort((a, b) => {
+    let valA, valB;
+
+    if (column === 'score') {
+      valA = parseFloat(a.q9 || a.q10) || 0;
+      valB = parseFloat(b.q9 || b.q10) || 0;
+    } else if (column === 'serviceDate') {
+      valA = a.serviceDate || '';
+      valB = b.serviceDate || '';
+    } else {
+      valA = a[column] || '';
+      valB = b[column] || '';
+    }
+
+    if (typeof valA === 'string') {
+      return sortAscending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+    } else {
+      return sortAscending ? valA - valB : valB - valA;
+    }
+  });
+
+  updateSortIcons();
+  currentPage = 1;
+  renderTable();
+}
+
+// Update the sort icons in the table header
+function updateSortIcons() {
+  const headers = document.querySelectorAll('#dataTable th.sortable');
+  headers.forEach(header => {
+    const iconSpan = header.querySelector('.sort-icon');
+    if (!iconSpan) return;
+    
+    iconSpan.innerHTML = '';
+    const colAttr = header.getAttribute('data-column');
+    if (colAttr === sortColumn) {
+      iconSpan.innerHTML = sortAscending 
+        ? ' <i class="fa-solid fa-sort-up"></i>' 
+        : ' <i class="fa-solid fa-sort-down"></i>';
+    } else {
+      iconSpan.innerHTML = ' <i class="fa-solid fa-sort"></i>';
+    }
+  });
 }
 
 // Update pagination info and controls

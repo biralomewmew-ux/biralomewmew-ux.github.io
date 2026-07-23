@@ -243,7 +243,7 @@
         <div class="table-header">
           <h3 tabindex="0" aria-expanded="false">विस्तृत डाटा <i>(Expand/Collapse गर्नुहोस)</i></h3>
           <div class="table-actions">
-            <input type="text" id="tableSearch" placeholder="खोज्नुहोस्..." наkeyup="filterTable()" />
+            <input type="text" id="tableSearch" placeholder="खोज्नुहोस्..." onkeyup="filterTable()" />
             <button onclick="exportData()">Excel Export</button>
           </div>
         </div>
@@ -251,11 +251,11 @@
           <table id="dataTable">
             <thead>
               <tr>
-                <th>मिति</th>
-                <th>कार्यालय</th>
-                <th>जिल्ला/स्थानीय तह</th>
-                <th>उमेर समूह</th>
-                <th>सन्तुष्टि स्कोर</th>
+                <th onclick="sortTable('serviceDate')" class="sortable" data-column="serviceDate">मिति <span class="sort-icon"></span></th>
+                <th onclick="sortTable('officeName')" class="sortable" data-column="officeName">कार्यालय <span class="sort-icon"></span></th>
+                <th onclick="sortTable('district')" class="sortable" data-column="district">जिल्ला/स्थानीय तह <span class="sort-icon"></span></th>
+                <th onclick="sortTable('ageGroup')" class="sortable" data-column="ageGroup">उमेर समूह <span class="sort-icon"></span></th>
+                <th onclick="sortTable('score')" class="sortable" data-column="score">सन्तुष्टि स्कोर <span class="sort-icon"></span></th>
                 <th>समस्या</th>
                 <th>सुझाव</th>
               </tr>
