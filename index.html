@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण फारम</title>
+  <link rel="icon" type="image/webp" href="emblem.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
   <!-- Nepali Date Picker CSS & JS -->
@@ -56,30 +57,31 @@
       color: var(--ink);
       font-family: "Mukta", "Kalimati", "Noto Sans Devanagari", "Mangal", Arial, sans-serif;
       line-height: 1.6;
-      padding: 28px 14px 80px;
+      padding: 20px 14px 60px;
     }
     .sheet {
-      max-width: 840px;
+      max-width: 980px;
       margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--line);
-      box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgba(36, 33, 24, 0.45);
+      border-radius: 18px;
+      box-shadow: 0 1px 0 var(--line), 0 22px 50px -30px rgba(36, 33, 24, 0.45);
       position: relative;
-      overflow: visible;
+      overflow: hidden;
     }
     .flagbar {
       height: 8px;
       background: linear-gradient(90deg, var(--crimson) 0 50%, var(--indigo) 50% 100%);
     }
     header {
-      padding: 34px 40px 26px;
+      padding: 24px 32px 20px;
       border-bottom: 1px solid var(--line);
       position: relative;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 22px;
-      min-height: 160px;
+      gap: 18px;
+      min-height: 140px;
       background:
         linear-gradient(rgba(251, 248, 240, 0.78), rgba(251, 248, 240, 0.82)),
         url('homepage-bg.webp') center/cover no-repeat;
@@ -163,17 +165,17 @@
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
     }
     .headline-lines .line1 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--crimson-deep);
     }
     .headline-lines .line2 {
-      font-size: 27px;
+      font-size: 25px;
       font-weight: 700;
       color: var(--indigo);
     }
     .headline-lines .line3 {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 700;
       color: var(--crimson);
     }
@@ -184,16 +186,19 @@
       margin: 10px 0 0;
     }
     .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
       margin-top: 8px;
       flex: 1 1 100%;
+      width: 100%;
     }
     .meta-field {
-      flex: 1 1 220px;
-      border-bottom: 1px solid var(--line);
-      padding: 6px 2px 8px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 2px 8px rgba(12, 55, 104, 0.06);
     }
     .meta-field label {
       display: block;
@@ -218,20 +223,32 @@
       color-scheme: light;
     }
     .intro-note {
-      margin: 22px 40px 0;
+      margin: 18px 32px 0;
       background: var(--paper-deep);
       border-left: 3px solid var(--gold);
+      border-radius: 12px;
       padding: 12px 16px;
       font-size: 13.5px;
       color: var(--ink-soft);
       position: relative;
       z-index: 1;
     }
+
+    .notice {
+      margin: 12px 32px 12px;
+      background: var(--paper-deep);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
     .legend {
       display: flex;
-      gap: 18px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin: 16px 40px 0;
+      margin: 14px 32px 0;
       font-size: 12.5px;
       color: var(--ink-soft);
     }
@@ -239,14 +256,14 @@
       color: var(--ink);
     }
     main {
-      padding: 22px 40px 10px;
+      padding: 18px 32px 10px;
     }
 
     /* office section (collapsible) */
     .office {
       border: 1px solid var(--line);
-      border-radius: 2px;
-      margin-bottom: 12px;
+      border-radius: 14px;
+      margin: 0 0 12px;
       overflow: hidden;
       background: var(--card);
       transition: box-shadow .2s ease;
@@ -257,11 +274,11 @@
     .office summary {
       list-style: none;
       cursor: pointer;
-      padding: 16px 18px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      background: var(--paper-deep);
+      gap: 12px;
+      background: linear-gradient(180deg, var(--paper-deep), #f6f1e2);
       border-bottom: 1px solid transparent;
       user-select: none;
     }
@@ -319,15 +336,15 @@
     }
 
     .qwrap {
-      padding: 6px 20px 20px;
+      padding: 4px 16px 16px;
     }
     .qrow {
-      padding: 16px 4px;
+      padding: 12px 2px;
       border-bottom: 1px dashed var(--line);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
     .qrow:last-child {
       border-bottom: none;
@@ -469,7 +486,7 @@
     }
 
     .office-ranking-section {
-      margin: 16px 0;
+      margin: 16px;
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -629,15 +646,15 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: var(--crimson);
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-deep));
       color: #fff;
       border: none;
-      padding: 14px 26px;
+      padding: 12px 22px;
       font-family: 'Noto Sans Devanagari', sans-serif;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: .01em;
-      border-radius: 2px;
+      border-radius: 999px;
       cursor: pointer;
       box-shadow: 0 10px 24px -14px rgba(166, 24, 42, .6);
     }
@@ -667,6 +684,12 @@
     }
     #result a {
       color: var(--indigo);
+    }
+
+    @media (max-width: 900px) {
+      .meta-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width:600px) {
@@ -705,6 +728,9 @@
       }
       .header-copy {
         flex: 1 1 auto;
+      }
+      .meta-row {
+        grid-template-columns: 1fr;
       }
       .headline-lines {
         gap: 2px;
@@ -876,19 +902,19 @@
       <div class="header-copy">
         <div class="headline-lines">
           <span class="line1">राष्ट्रिय सतर्कता केन्द्र</span>
-          <span class="line2">सेवाग्राही प्रतिक्रिया संकलन फारम</span>
           <span class="line3">सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण</span>
+          <span class="line2">सेवाग्राही प्रतिक्रिया संकलन फारम</span>          
         </div>
-        <p class="subtitle">तल सूचीबद्ध १० वटा सरकारी सेवा प्रवाह गर्ने कार्यालय/निकायमध्ये तपाईंले हालसालै सेवा लिनुभएको खण्ड (हरू) खोलेर प्रश्नको जवाफ भर्नुहोस्। सेवा नलिएको खण्ड खाली छोड्न सक्नुहुन्छ।</p>
+        <!-- <p class="subtitle">तल सूचीबद्ध १० वटा सरकारी सेवा प्रवाह गर्ने कार्यालय/निकायमध्ये तपाईंले सेवा लिनुभएको खण्ड (हरू) खोलेर प्रश्नको जवाफ भर्नुहोस्। सेवा नलिएको खण्ड खाली छोड्न सक्नुहुन्छ।</p> -->
       </div>
 
       <div class="meta-row">
         <div class="meta-field">
-          <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवा लिएको जिल्ला/स्थानीय तह</label>
-          <input type="text" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px;" placeholder="जस्तै: काठमाडौं महानगरपालिका" />
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">तपाईंले सेवा लिनुभएको जिल्ला/स्थानीय तह</label>
+          <input type="text" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px;" placeholder="जिल्ला/स्थानीय तह" />
         </div>
         <div class="meta-field">
-          <label style="color: #041426; font-size: 14px; font-weight: 700;">सेवाग्राहीको उमेर समूह</label>
+          <label style="color: #041426; font-size: 14px; font-weight: 700;">उत्तरदाताको उमेर समूह</label>
           <select id="ageGroup" style="border: 1px solid #291b93; padding: 10px; border-radius: 5px; width: 100%;">
             <option value="">उमेर समूह छान्नुहोस्</option>
             <option value="२५ वर्षभन्दा कम">२५ वर्षभन्दा कम</option>
@@ -960,7 +986,7 @@
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        <span>राम्रो सेवा प्रवाह गरिरहेका ३ कार्यालयहरु र राम्रो सेवा प्रवाह गर्न नसकेका ३ कार्यालयहरु <i>(Expand/Collapse गर्नुहोस)</i></span>
+        <span>तपाईंको विचारमा राम्रो सेवा प्रवाह गरिरहेका ३ कार्यालयहरु र सेवा प्रवाहमा कमजोर रहेका ३ कार्यालयहरु <i>(Expand/Collapse गर्नुहोस)</i></span>
         <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -1015,7 +1041,7 @@
           </label>
           <input type="text" id="goodOfficeOther" class="other-field" placeholder="कार्यालयको नाम लेख्नुहोस्" style="display: none;">
         </div>
-      </div>
+      </div>      
 
       <div class="ranking-question">
         <label>२. तपाईंको अनुभवमा यी मध्ये राम्रो सेवा प्रवाह गर्न नसकेका ३ कार्यालयहरु कुन हुन? चिन्ह लगाउनुहोस्</label>
@@ -1068,6 +1094,8 @@
         </div>
       </div>
     </details>
+
+    <div><p class="notice">तल सूचीबद्ध १० वटा सरकारी सेवा प्रवाह गर्ने कार्यालय/निकायमध्ये तपाईंले सेवा लिनुभएको खण्ड (हरू) खोलेर प्रश्नको जवाफ भर्नुहोस्।</p></div>
 
     <main id="officesRoot"></main>
 
@@ -1231,7 +1259,7 @@
     }, {
       id: 'industry',
       icon: 'factory', 
-      name: 'उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय',
+      name: 'उद्योग, वाणिज्य, आपूर्ति र कर सम्बन्धी कार्यालय',
       tag: 'उद्योग दर्ता, कम्पनी दर्ता, कर दर्ता, कर भुक्तानी',
       q: [
         '१. तपाईंले आवश्यक सेवा, प्रक्रिया र आवश्यक कागजात सम्बन्धी सूचना सहज रूपमा प्राप्त गर्नुभयो ?',

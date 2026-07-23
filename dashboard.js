@@ -7,6 +7,20 @@ let currentPage = 1;
 let itemsPerPage = 20;
 let tableData = [];
 
+const CHART_FONT_FAMILY = '"Mukta", "Kalimati", "Noto Sans Devanagari", Arial, sans-serif';
+const CHART_LEGEND_LABELS = {
+  color: '#5b5648',
+  usePointStyle: true,
+  boxWidth: 10,
+  boxHeight: 10,
+  padding: 12,
+  font: {
+    family: CHART_FONT_FAMILY,
+    size: 11,
+    weight: '700'
+  }
+};
+
 // Office data from index.html
 const OFFICES = [{
   id: 'dao',
@@ -109,7 +123,7 @@ const OFFICES = [{
       ]
 }, {
   id: 'industry',
-  name: 'खानेपानी तथा ढल निकास (नेपाल खानेपानी संस्थान)',
+  name: 'उद्योग, वाणिज्य, आपूर्ति र कर सम्बन्धी कार्यालय',
   q: [
         '१. तपाईंले आवश्यक सेवा, प्रक्रिया र आवश्यक कागजात सम्बन्धी सूचना सहज रूपमा प्राप्त गर्नुभयो ?',
         '२. सेवा प्राप्त गर्ने प्रक्रिया स्पष्ट, सरल र बुझ्न सजिलो थियो ?',
@@ -575,7 +589,8 @@ function updateCharts(data, stats) {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'right'
+          position: 'right',
+          labels: CHART_LEGEND_LABELS
         }
       }
     }

@@ -35,28 +35,32 @@ body {
 
 /* Header */
 .dashboard-header {
-  padding: 24px 32px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
-  gap: 20px;
-  background: linear-gradient(rgba(251, 248, 240, 0.78), rgba(251, 248, 240, 0.82)),
+  gap: 16px;
+  background: linear-gradient(rgba(251, 248, 240, 0.82), rgba(251, 248, 240, 0.86)),
               url('homepage-bg.webp') center/cover no-repeat;
   position: relative;
-  min-height: 120px;
+  min-height: 102px;
 }
 
 .brand-mark {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 4px 14px rgba(12, 55, 104, 0.12);
+  flex-shrink: 0;
 }
 
 .brand-mark img {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -79,19 +83,19 @@ body {
 }
 
 .headline-lines .line1 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--crimson-deep);
 }
 
 .headline-lines .line2 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--indigo);
 }
 
 .headline-lines .line3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--crimson);
 }
@@ -99,14 +103,15 @@ body {
 .close-btn {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 12px;
   border: 1.5px solid var(--crimson);
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.88);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(12, 55, 104, 0.12);
 }
 
 .close-btn:hover {
@@ -127,15 +132,16 @@ body {
 .logout-btn {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 12px;
   border: 1.5px solid var(--crimson);
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.88);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   margin-right: 8px;
+  box-shadow: 0 2px 8px rgba(12, 55, 104, 0.12);
 }
 
 .logout-btn:hover {
@@ -155,7 +161,7 @@ body {
 
 /* Dashboard Content */
 .dashboard-content {
-  padding: 24px 32px;
+  padding: 18px 24px;
 }
 
 /* Filters Section */
@@ -163,8 +169,8 @@ body {
   background: var(--paper-deep);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
 }
 
 .filters-section h3,
@@ -178,7 +184,7 @@ body {
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .filters-section.collapsed .filters-grid {
@@ -192,31 +198,31 @@ body {
 
 .filters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .filter-group label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--ink-soft);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .filter-group select,
 .filter-group input {
-  padding: 10px 12px;
+  padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink);
   background: var(--card);
   outline: none;
@@ -229,17 +235,19 @@ body {
 }
 
 .reset-btn {
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: var(--crimson);
   color: #fff;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   margin-left: 8px;
+  min-height: 36px;
+  box-shadow: 0 2px 6px rgba(166, 24, 42, 0.18);
 }
 
 .reset-btn:hover {
@@ -247,16 +255,18 @@ body {
 }
 
 .filter-btn {
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: var(--indigo);
   color: #fff;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  min-height: 36px;
+  box-shadow: 0 2px 6px rgba(12, 55, 104, 0.18);
 }
 
 .filter-btn:hover {
@@ -266,19 +276,19 @@ body {
 /* Stat Cards */
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .stat-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 16px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   box-shadow: 0 2px 8px rgba(12, 55, 104, 0.08);
   transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
 }
@@ -289,6 +299,11 @@ body {
   border-color: var(--indigo);
 }
 
+.stat-card:hover .stat-icon {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 8px 20px rgba(12, 55, 104, 0.24);
+}
+
 .stat-icon {
   width: 56px;
   height: 56px;
@@ -296,12 +311,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  flex-shrink: 0;
 }
 
-.stat-icon svg {
-  width: 28px;
-  height: 28px;
-  stroke: #fff;
+.stat-icon i {
+  font-size: 24px;
+  color: #fff;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .stat-icon.total {
@@ -325,10 +343,10 @@ body {
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .stat-label {
@@ -340,18 +358,19 @@ body {
 /* Charts Section */
 .charts-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .chart-container {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 12px 14px;
   box-shadow: 0 2px 8px rgba(12, 55, 104, 0.08);
   transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+  min-height: 280px;
 }
 
 .chart-container:hover {
@@ -362,14 +381,25 @@ body {
 
 .chart-container h3 {
   font-family: 'Noto Serif Devanagari', serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--indigo);
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
 }
 
 .chart-container canvas {
-  max-height: 300px;
+  width: 100% !important;
+  height: 210px !important;
+  max-height: 210px;
+}
+
+.map-container {
+  min-height: 360px;
+}
+
+.map-container #districtMap {
+  height: 290px !important;
 }
 
 /* Table Section */
@@ -423,13 +453,15 @@ body {
   padding: 8px 16px;
   background: var(--indigo);
   color: #fff;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  min-height: 36px;
+  box-shadow: 0 2px 6px rgba(12, 55, 104, 0.16);
 }
 
 .table-actions button:hover {
@@ -478,15 +510,17 @@ body {
 }
 
 .pagination-controls button {
-  padding: 8px 16px;
+  padding: 8px 14px;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--ink);
   font-size: 13px;
   font-family: inherit;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 34px;
 }
 
 .pagination-controls button:hover:not(:disabled) {
@@ -586,6 +620,12 @@ tbody tr:hover {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .charts-section {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .dashboard-header {
     padding: 16px 20px;

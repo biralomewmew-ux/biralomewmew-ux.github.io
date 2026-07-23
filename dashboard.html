@@ -7,6 +7,7 @@
   <link rel="icon" type="image/webp" href="emblem.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Nepali Date Picker CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
@@ -32,8 +33,8 @@
       <div class="header-copy">
         <div class="headline-lines">
           <span class="line1">राष्ट्रिय सतर्कता केन्द्र</span>
-          <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>
           <span class="line3">सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण</span>
+          <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>          
         </div>
       </div>
       <button class="logout-btn" onclick="logout()" title="लगआउट">
@@ -159,12 +160,7 @@
       <div class="stat-cards">
         <div class="stat-card">
           <div class="stat-icon total">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
+            <i class="fa-solid fa-users"></i>
           </div>
           <div class="stat-content">
             <div class="stat-value" id="totalResponses">०</div>
@@ -173,12 +169,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon office">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
+            <i class="fa-solid fa-building-columns"></i>
           </div>
           <div class="stat-content">
             <div class="stat-value" id="totalOffices">०</div>
@@ -187,12 +178,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon satisfaction">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-              <line x1="9" y1="9" x2="9.01" y2="9"></line>
-              <line x1="15" y1="9" x2="15.01" y2="9"></line>
-            </svg>
+            <i class="fa-solid fa-face-smile"></i>
           </div>
           <div class="stat-content">
             <div class="stat-value" id="avgSatisfaction">०.०</div>
@@ -201,10 +187,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon district">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
+            <i class="fa-solid fa-location-dot"></i>
           </div>
           <div class="stat-content">
             <div class="stat-value" id="totalDistricts">०</div>
@@ -223,41 +206,35 @@
           <h3>सन्तुष्टि स्कोर तुलना</h3>
           <canvas id="satisfactionChart"></canvas>
         </div>
-      </div>
-
-      <div class="charts-section">
         <div class="chart-container">
           <h3>उमेर समूह वितरण</h3>
           <canvas id="ageGroupChart"></canvas>
         </div>
+      </div>
+
+      <div class="charts-section">
         <div class="chart-container">
           <h3>पेशा अनुसार प्रतिक्रिया</h3>
           <canvas id="professionChart"></canvas>
         </div>
-      </div>
-
-      <div class="charts-section">
         <div class="chart-container">
           <h3>जिल्ला अनुसार प्रतिक्रिया</h3>
           <canvas id="districtChart"></canvas>
         </div>
-      </div>
-
-      <div class="charts-section">
-        <div class="chart-container map-container">
-          <h3>जिल्लागत विवरण-नक्सामा</h3>
-          <div id="districtMap" style="height: 400px; width: 100%;"></div>
-        </div>
-      </div>
-
-      <div class="charts-section">
         <div class="chart-container">
           <h3>राम्रो सेवा प्रवाह गरिरहेका कार्यालयहरू</h3>
           <canvas id="goodOfficeChart"></canvas>
         </div>
+      </div>
+
+      <div class="charts-section">
         <div class="chart-container">
           <h3>राम्रो सेवा प्रवाह गर्न नसकेका कार्यालयहरू</h3>
           <canvas id="badOfficeChart"></canvas>
+        </div>
+        <div class="chart-container map-container">
+          <h3>जिल्लागत विवरण-नक्सामा</h3>
+          <div id="districtMap" style="height: 400px; width: 100%;"></div>
         </div>
       </div>
 
