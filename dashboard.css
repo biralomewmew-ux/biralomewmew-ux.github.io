@@ -167,12 +167,27 @@ body {
   margin-bottom: 24px;
 }
 
+.filters-section h3,
+.table-header h3 {
+  cursor: pointer;
+  user-select: none;
+}
+
 .filters-section h3 {
   font-family: 'Noto Serif Devanagari', serif;
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 16px;
+}
+
+.filters-section.collapsed .filters-grid {
+  display: none;
+}
+
+.table-section.collapsed .table-wrapper,
+.table-section.collapsed .pagination {
+  display: none;
 }
 
 .filters-grid {

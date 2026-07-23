@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>सार्वजनिक सेवा सन्तुष्टि ड्यासबोर्ड</title>
+  <link rel="icon" type="image/webp" href="emblem.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
   <!-- Nepali Date Picker CSS & JS -->
@@ -52,8 +53,8 @@
 
     <div class="dashboard-content">
       <!-- Filters Section -->
-      <div class="filters-section">
-        <h3>फिल्टरहरू</h3>
+      <div class="filters-section collapsed">
+        <h3 tabindex="0" aria-expanded="false">फिल्टरहरू <i>(Expand/Collapse गर्नुहोस)</i></h3>
         <div class="filters-grid">
           <div class="filter-group">
             <label>प्रदेश</label>
@@ -261,9 +262,9 @@
       </div>
 
       <!-- Data Table -->
-      <div class="table-section">
+      <div class="table-section collapsed">
         <div class="table-header">
-          <h3>विस्तृत डाटा</h3>
+          <h3 tabindex="0" aria-expanded="false">विस्तृत डाटा <i>(Expand/Collapse गर्नुहोस)</i></h3>
           <div class="table-actions">
             <input type="text" id="tableSearch" placeholder="खोज्नुहोस्..." наkeyup="filterTable()" />
             <button onclick="exportData()">Excel Export</button>

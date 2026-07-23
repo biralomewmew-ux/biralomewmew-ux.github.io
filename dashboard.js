@@ -167,8 +167,44 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeProvinceFilter();
   initializeOfficeFilter();
   initializeNepaliDatePicker();
+  initializeCollapsibleSections();
   loadDashboardData();
 });
+
+function initializeCollapsibleSections() {
+  const filtersSection = document.querySelector('.filters-section');
+  const filtersHeading = document.querySelector('.filters-section h3');
+  const tableSection = document.querySelector('.table-section');
+  const tableHeading = document.querySelector('.table-header h3');
+
+  if (filtersSection && filtersHeading) {
+    filtersHeading.addEventListener('click', function() {
+      const isCollapsed = filtersSection.classList.toggle('collapsed');
+      filtersHeading.setAttribute('aria-expanded', String(!isCollapsed));
+    });
+
+    filtersHeading.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        filtersHeading.click();
+      }
+    });
+  }
+
+  if (tableSection && tableHeading) {
+    tableHeading.addEventListener('click', function() {
+      const isCollapsed = tableSection.classList.toggle('collapsed');
+      tableHeading.setAttribute('aria-expanded', String(!isCollapsed));
+    });
+
+    tableHeading.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        tableHeading.click();
+      }
+    });
+  }
+}
 
 // Initialize province filter from nepalData.js
 function initializeProvinceFilter() {
