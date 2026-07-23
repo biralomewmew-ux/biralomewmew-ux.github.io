@@ -1,6 +1,6 @@
 // Dashboard JavaScript for Customer Survey
 // Replace this URL with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJDrYM1l3P_ik41MKITS885SRpsoDjp6CMkhV9OUOdben2vVaz7Er9XtTfzVcQE_L7qw/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6dgalxlCh9AQH_-5s48fU_0qCdAODbCzp3meL0xLbMEcygwMs-qe1GYrZR28LLmC5pA/exec';
 
 // Pagination state
 let currentPage = 1;
@@ -93,35 +93,35 @@ const OFFICES = [{
     '९. समग्र सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखाको स्कोर (१–५)',
   ]
 }, {
-  id: 'electricity',
-  name: 'नेपाल विद्युत् प्राधिकरण',
+  id: 'foreign_employment',
+  name: 'वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय',
   q: [
-    '१. नयाँ लाइन/मिटर जडानको प्रक्रिया सहज थियो ?',
-    '२. महसुल भुक्तानी प्रणाली सरल र पारदर्शी थियो ?',
-    '३. विद्युत् आपूर्तिको गुणस्तर (भोल्टेज) राम्रो थियो ?',
-    '४. गुनासो/जडान समस्या समाधान समयमै भयो ?',
-    '५. कार्यालयको कर्मचारी व्यवहार सहयोगी थियो ?',
-    '६. महसुलको बिल स्पष्ट र सही थियो ?',
-    '७. अनलाइन महसुल तिर्ने/हेर्ने सुविधा प्रभावकारी थियो ?',
-    '८. लोडसेडिङ/अवरोधको समयमा सूचना प्रणाली प्रभावकारी थियो ?',
-    '९. विद्युत् सेवाको समग्र स्कोर (१–५)',
-    '१०. के तपाईं विद्युत् प्राधिकरणको सेवा सिफारिस गर्नुहुन्छ ?'
-  ]
+        '१. सेवा सम्बन्धी सूचना तथा आवश्यक कागजातको जानकारी सहज रूपमा प्राप्त गर्नुभयो ?',
+        '२. सेवा प्रक्रिया स्पष्ट र बुझ्न सजिलो थियो ?',
+        '३. कर्मचारीले शिष्ट र सहयोगी व्यवहार गरे ?',
+        '४. सेवा निर्धारित समयभित्र प्राप्त गर्नुभयो ?',
+        '५. अनलाइन प्रणाली (FEIMS आदि) प्रभावकारी थियो ?',
+        '६. सेवा शुल्क तथा प्रक्रिया पारदर्शी थियो ?',
+        '७. अनावश्यक झन्झट वा धेरै पटक कार्यालय धाउनुपरेन ?',
+        '८. गुनासो वा जिज्ञासाको उचित सम्बोधन भयो ?',
+        '९. सेवा निष्पक्ष र पारदर्शी रूपमा प्रदान गरियो ?',
+        '१०. वैदेशिक रोजगार सेवाको समग्र स्कोर (१–५) ?'
+      ]
 }, {
-  id: 'water',
+  id: 'industry',
   name: 'खानेपानी तथा ढल निकास (नेपाल खानेपानी संस्थान)',
   q: [
-    '१. खानेपानी जडान/धाराको प्रक्रिया सहज थियो ?',
-    '२. पानीको गुणस्तर र आपूर्ति भरपर्दो थियो ?',
-    '३. महसुल/दस्तुर उचित र स्पष्ट थियो ?',
-    '४. मर्मत/गुनासो समाधान समयमै भयो ?',
-    '५. कर्मचारीको सहयोगशीलता उचित थियो ?',
-    '६. बिल/रसिद प्रणाली पारदर्शी थियो ?',
-    '७. अनलाइन/मोबाइल भुक्तानी सेवा प्रभावकारी थियो ?',
-    '८. ढल/निकास सेवाको पहुँच उपलब्ध थियो ?',
-    '९. खानेपानी सेवाको समग्र स्कोर (१–५)',
-    
-  ]
+        '१. तपाईंले आवश्यक सेवा, प्रक्रिया र आवश्यक कागजात सम्बन्धी सूचना सहज रूपमा प्राप्त गर्नुभयो ?',
+        '२. सेवा प्राप्त गर्ने प्रक्रिया स्पष्ट, सरल र बुझ्न सजिलो थियो ?',
+        '३. कर्मचारीहरूले शिष्ट, सम्मानजनक र सहयोगी व्यवहार गरे ?',
+        '४. सेवा निर्धारित समयभित्र प्राप्त गर्नुभयो ?',
+        '५. सेवा शुल्क, कर वा दस्तुर सम्बन्धी जानकारी स्पष्ट र पारदर्शी थियो ?',
+        '६. अनलाइन सेवा, डिजिटल प्रणाली वा विद्युतीय माध्यम (लागू भएमा) प्रयोग गर्न सहज र प्रभावकारी थियो ?',
+        '७. सेवामा निष्पक्षता, पारदर्शिता तथा उत्तरदायित्वको अनुभव गर्नुभयो ?',
+        '८. गुनासो, सुझाव वा जिज्ञासा राख्ने तथा त्यसको सुनुवाइ हुने व्यवस्था प्रभावकारी थियो ?',
+        '९. सेवा प्राप्त गर्ने क्रममा अनावश्यक ढिलाइ, झन्झट वा अतिरिक्त खर्च व्यहोर्नुपरेन?',
+        '१०. उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालयको सेवाको समग्र स्कोर (१–५) ?'
+      ]
 }, {
   id: 'police',
   name: 'नेपाल प्रहरी',
@@ -153,7 +153,7 @@ const OFFICES = [{
 }];
 
 // Global variables for charts
-let officeChart, satisfactionChart, ageGroupChart, districtChart;
+let officeChart, satisfactionChart, ageGroupChart, districtChart, goodOfficeChart, badOfficeChart;
 let currentData = [];
 
 function toNepaliDigits(value) {
@@ -409,6 +409,8 @@ function updateCharts(data, stats) {
   if (satisfactionChart) satisfactionChart.destroy();
   if (ageGroupChart) ageGroupChart.destroy();
   if (districtChart) districtChart.destroy();
+  if (goodOfficeChart) goodOfficeChart.destroy();
+  if (badOfficeChart) badOfficeChart.destroy();
   
   // Office responses chart
   const officeLabels = Object.keys(stats.officeStats || {});
@@ -545,7 +547,7 @@ function updateCharts(data, stats) {
   // District chart
   const districtLabels = Object.keys(stats.districtStats || {}).slice(0, 10);
   const districtData = districtLabels.map(district => stats.districtStats[district]);
-  
+
   const districtCtx = document.getElementById('districtChart').getContext('2d');
   districtChart = new Chart(districtCtx, {
     type: 'bar',
@@ -556,6 +558,82 @@ function updateCharts(data, stats) {
         data: districtData,
         backgroundColor: 'rgba(185, 133, 46, 0.7)',
         borderColor: 'rgba(185, 133, 46, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  // Good offices chart
+  const goodOfficeEntries = Object.entries(stats.goodOfficeStats || {}).sort((a, b) => b[1] - a[1]);
+  const goodOfficeLabels = goodOfficeEntries.slice(0, 3).map(entry => entry[0]);
+  const goodOfficeData = goodOfficeEntries.slice(0, 3).map(entry => entry[1]);
+
+  const goodOfficeCtx = document.getElementById('goodOfficeChart').getContext('2d');
+  goodOfficeChart = new Chart(goodOfficeCtx, {
+    type: 'bar',
+    data: {
+      labels: goodOfficeLabels,
+      datasets: [{
+        label: 'प्रतिक्रियाहरू',
+        data: goodOfficeData,
+        backgroundColor: 'rgba(34, 197, 94, 0.7)',
+        borderColor: 'rgba(34, 197, 94, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  // Bad offices chart
+  const badOfficeEntries = Object.entries(stats.badOfficeStats || {}).sort((a, b) => b[1] - a[1]);
+  const badOfficeLabels = badOfficeEntries.slice(0, 3).map(entry => entry[0]);
+  const badOfficeData = badOfficeEntries.slice(0, 3).map(entry => entry[1]);
+
+  const badOfficeCtx = document.getElementById('badOfficeChart').getContext('2d');
+  badOfficeChart = new Chart(badOfficeCtx, {
+    type: 'bar',
+    data: {
+      labels: badOfficeLabels,
+      datasets: [{
+        label: 'प्रतिक्रियाहरू',
+        data: badOfficeData,
+        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+        borderColor: 'rgba(239, 68, 68, 1)',
         borderWidth: 1
       }]
     },

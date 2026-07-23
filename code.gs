@@ -29,6 +29,8 @@ function setupSheet() {
       "Age_Group",
       "Service_Date",
       "Final_Suggestion",
+      "Good_Offices",
+      "Bad_Offices",
       "Office_ID",
       "Office_Name",
       "Question_1",
@@ -47,6 +49,14 @@ function setupSheet() {
 
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.setFrozenRows(1);
+  } else {
+    // Check if new columns need to be added to existing sheet
+    const currentHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (!currentHeaders.includes("Good_Offices")) {
+      sheet.insertColumns(6, 2);
+      sheet.getRange(1, 6).setValue("Good_Offices");
+      sheet.getRange(1, 7).setValue("Bad_Offices");
+    }
   }
 
   return sheet;
@@ -64,18 +74,20 @@ function saveSurveyData(data) {
   const normalizedServiceDate = serviceDateValue ? "'" + serviceDateValue : "";
   
   const rows = [];
-  
+
   // Iterate through each office's responses
   for (const officeName in responses) {
     const officeData = responses[officeName];
     const officeId = getOfficeIdByName(officeName);
-    
+
     const row = [
       timestamp,
       metadata.जिल्ला_स्थानीय_तह || "",
       metadata.उमेर_समूह || "",
       normalizedServiceDate,
       metadata.सेवा_सुधार_सुझाव || "",
+      metadata.राम्रो_सेवा_कार्यालयहरू || "",
+      metadata.खराब_सेवा_कार्यालयहरू || "",
       officeId,
       officeName,
       officeData.q1 || "",
@@ -91,7 +103,7 @@ function saveSurveyData(data) {
       officeData.समस्या || "",
       officeData.सुझाव || ""
     ];
-    
+
     rows.push(row);
   }
   
@@ -112,8 +124,8 @@ function getOfficeIdByName(officeName) {
     "यातायात व्यवस्था कार्यालय": "transport",
     "स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)": "hospital",
     "शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)": "school",
-    "नेपाल विद्युत् प्राधिकरण": "electricity",
-    "खानेपानी तथा ढल निकास (नेपाल खानेपानी संस्थान)": "water",
+    "वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय": "foreign_employment",
+    "उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय": "industry",
     "नेपाल प्रहरी": "police",
     "स्थानीय तह (पालिका/वडा कार्यालय)": "local_level"
   };
@@ -139,20 +151,22 @@ function getDashboardData() {
     ageGroup: row[2],
     serviceDate: row[3],
     finalSuggestion: row[4],
-    officeId: row[5],
-    officeName: row[6],
-    q1: row[7],
-    q2: row[8],
-    q3: row[9],
-    q4: row[10],
-    q5: row[11],
-    q6: row[12],
-    q7: row[13],
-    q8: row[14],
-    q9: row[15],
-    q10: row[16],
-    problem: row[17],
-    suggestion: row[18]
+    goodOffices: row[5] || "",
+    badOffices: row[6] || "",
+    officeId: row[7],
+    officeName: row[8],
+    q1: row[9],
+    q2: row[10],
+    q3: row[11],
+    q4: row[12],
+    q5: row[13],
+    q6: row[14],
+    q7: row[15],
+    q8: row[16],
+    q9: row[17],
+    q10: row[18],
+    problem: row[19],
+    suggestion: row[20]
   }));
   
   // Calculate statistics
@@ -168,31 +182,49 @@ function calculateStatistics(data) {
   const districtStats = {};
   const ageGroupStats = {};
   const satisfactionScores = {};
-  
+  const goodOfficeStats = {};
+  const badOfficeStats = {};
+
   data.forEach(row => {
     // Count by office
     if (!officeStats[row.officeName]) {
       officeStats[row.officeName] = { count: 0, scores: [] };
     }
     officeStats[row.officeName].count++;
-    
+
     // Collect satisfaction scores (q9 or q10 depending on office)
     const score = row.q9 || row.q10;
     if (score && !isNaN(parseInt(score))) {
       officeStats[row.officeName].scores.push(parseInt(score));
     }
-    
+
     // Count by district
     if (row.district) {
       districtStats[row.district] = (districtStats[row.district] || 0) + 1;
     }
-    
+
     // Count by age group
     if (row.ageGroup) {
       ageGroupStats[row.ageGroup] = (ageGroupStats[row.ageGroup] || 0) + 1;
     }
+
+    // Count good offices
+    if (row.goodOffices) {
+      const offices = row.goodOffices.split(',').map(o => o.trim()).filter(o => o);
+      offices.forEach(office => {
+        goodOfficeStats[office] = (goodOfficeStats[office] || 0) + 1;
+      });
+    }
+
+    // Count bad offices
+    if (row.badOffices) {
+      const offices = row.badOffices.split(',').map(o => o.trim()).filter(o => o);
+      offices.forEach(office => {
+        badOfficeStats[office] = (badOfficeStats[office] || 0) + 1;
+      });
+    }
   });
-  
+
   // Calculate average satisfaction scores
   for (const office in officeStats) {
     const scores = officeStats[office].scores;
@@ -203,13 +235,15 @@ function calculateStatistics(data) {
       satisfactionScores[office] = "N/A";
     }
   }
-  
+
   return {
     totalResponses,
     officeStats,
     districtStats,
     ageGroupStats,
-    satisfactionScores
+    satisfactionScores,
+    goodOfficeStats,
+    badOfficeStats
   };
 }
 

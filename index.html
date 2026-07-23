@@ -468,6 +468,110 @@
       color: var(--indigo);
     }
 
+    .office-ranking-section {
+      margin: 16px 0;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .office-ranking-section[open] {
+      box-shadow: 0 10px 24px -20px rgba(12, 55, 104, .5);
+    }
+    .ranking-header {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid transparent;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+    .office-ranking-section[open] .ranking-header {
+      border-bottom-color: var(--line);
+    }
+    .ranking-header:hover {
+      background: var(--paper-deep);
+    }
+    .ranking-header::-webkit-details-marker {
+      display: none;
+    }
+    .ranking-icon {
+      color: var(--indigo);
+      flex-shrink: 0;
+    }
+    .ranking-header span {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .ranking-header .chevron {
+      color: var(--ink-soft);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+    .office-ranking-section[open] .ranking-header .chevron {
+      transform: rotate(180deg);
+    }
+    .ranking-question {
+      margin-bottom: 20px;
+      padding: 0 20px 20px;
+    }
+    .ranking-question:last-child {
+      margin-bottom: 0;
+    }
+    .ranking-question label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .ranking-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 8px;
+    }
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      transition: background 0.2s ease;
+    }
+    .checkbox-option:hover {
+      background: var(--paper);
+    }
+    .checkbox-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .checkbox-option span {
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .other-field {
+      grid-column: 1 / -1;
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--paper);
+      color: var(--ink);
+      margin-top: 8px;
+    }
+    .other-field:focus {
+      outline: none;
+      border-color: var(--indigo);
+    }
+
     footer {
       padding: 26px 40px 40px;
       border-top: 1px solid var(--line);
@@ -815,6 +919,123 @@
       <button type="button" onclick="toggleAll(false)">सबै खण्ड बन्द गर्नुहोस्</button>
     </div>
 
+    <details class="office-ranking-section">
+      <summary class="ranking-header">
+        <svg class="ranking-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>राम्रो सेवा प्रवाह गरिरहेका ३ कार्यालयहरु र राम्रो सेवा प्रवाह गर्न नसकेका ३ कार्यालयहरु</span>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </summary>
+
+      <div class="ranking-question">
+        <label>१. तपाईंको अनुभवमा यी मध्ये राम्रो सेवा प्रवाह गरिरहेका ३ कार्यालयहरु कुन हुन? चिन्ह लगाउनुहोस्</label>
+        <div class="ranking-options">
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="जिल्ला प्रशासन कार्यालय">
+            <span>जिल्ला प्रशासन कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="मालपोत कार्यालय">
+            <span>मालपोत कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="नापी कार्यालय">
+            <span>नापी कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="यातायात व्यवस्था कार्यालय">
+            <span>यातायात व्यवस्था कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)">
+            <span>स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)">
+            <span>शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय">
+            <span>वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय">
+            <span>उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="नेपाल प्रहरी">
+            <span>नेपाल प्रहरी</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="स्थानीय तह (पालिका/वडा कार्यालय)">
+            <span>स्थानीय तह (पालिका/वडा कार्यालय)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="goodOffice" value="अन्य" onchange="toggleOtherField('goodOfficeOther', this)">
+            <span>अन्य</span>
+          </label>
+          <input type="text" id="goodOfficeOther" class="other-field" placeholder="कार्यालयको नाम लेख्नुहोस्" style="display: none;">
+        </div>
+      </div>
+
+      <div class="ranking-question">
+        <label>२. तपाईंको अनुभवमा यी मध्ये राम्रो सेवा प्रवाह गर्न नसकेका ३ कार्यालयहरु कुन हुन? चिन्ह लगाउनुहोस्</label>
+        <div class="ranking-options">
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="जिल्ला प्रशासन कार्यालय">
+            <span>जिल्ला प्रशासन कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="मालपोत कार्यालय">
+            <span>मालपोत कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="नापी कार्यालय">
+            <span>नापी कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="यातायात व्यवस्था कार्यालय">
+            <span>यातायात व्यवस्था कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)">
+            <span>स्वास्थ्य सेवा (सरकारी अस्पताल/स्वास्थ्य केन्द्र)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)">
+            <span>शिक्षा (सामुदायिक विद्यालय, शिक्षा सँग सम्बन्धित कार्यालय, NOC शाखा)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय">
+            <span>वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय">
+            <span>उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="नेपाल प्रहरी">
+            <span>नेपाल प्रहरी</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="स्थानीय तह (पालिका/वडा कार्यालय)">
+            <span>स्थानीय तह (पालिका/वडा कार्यालय)</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" name="badOffice" value="अन्य" onchange="toggleOtherField('badOfficeOther', this)">
+            <span>अन्य</span>
+          </label>
+          <input type="text" id="badOfficeOther" class="other-field" placeholder="कार्यालयको नाम लेख्नुहोस्" style="display: none;">
+        </div>
+      </div>
+    </details>
+
     <main id="officesRoot"></main>
 
     <footer>
@@ -848,7 +1069,10 @@
       health: '<circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M16 11v10M11 16h10" stroke="currentColor" stroke-width="1.8"/>',
       school: '<path d="M4 12 16 6l12 6-12 6z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 15v6c0 1.5 3 3 7 3s7-1.5 7-3v-6" stroke="currentColor" stroke-width="1.4" fill="none"/>',
       police: '<path d="M16 5l9 3v7c0 6-4 10-9 12-5-2-9-6-9-12V8z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 16l3 3 5-6" stroke="currentColor" stroke-width="1.6" fill="none"/>',
-      bolt: '<path d="M17 4 7 18h7l-2 10 12-16h-8z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>'
+      bolt: '<path d="M17 4 7 18h7l-2 10 12-16h-8z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/>',
+      briefcase: '<rect x="7" y="8" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M7 14h18" stroke="currentColor" stroke-width="1.4"/>',
+      factory: '<path d="M6 26h20" stroke="currentColor" stroke-width="1.6"/><path d="M8 26V14l6-3v15" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M16 26V10l6 3v13" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M24 26V13l4-2v15" stroke="currentColor" stroke-width="1.6" fill="none"/>',
+      tree: '<path d="M16 5c-5 0-8 3-8 7 0 2.1 1 4 3 5.3C10 18 9 20 9 23h14c0-3-1-5-2-5.7 2-.5 3-3 3-5.3 0-4-3-7-8-7z" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M16 23v5" stroke="currentColor" stroke-width="1.4"/>'
     };
 
     // ----- office definitions (10 offices, each with 10 questions from index2) -----
@@ -955,38 +1179,38 @@
         
       ]
     }, {
-      id: 'electricity',
-      icon: 'bolt',
-      name: 'नेपाल विद्युत् प्राधिकरण',
-      tag: 'बिजुली जडान, महसुल',
+      id: 'foreign_employment',
+      icon: 'briefcase',
+      name: 'वैदेशिक रोजगार विभाग/वैदेशिक रोजगार कार्यालय',
+      tag: 'श्रम स्वीकृति, पुनः श्रम स्वीकृति, वैदेशिक रोजगार अनुमति, अभिमुखीकरण सम्बन्धी सेवा',
       q: [
-        '१. नयाँ लाइन/मिटर जडानको प्रक्रिया सहज थियो ?',
-        '२. महसुल भुक्तानी प्रणाली सरल र पारदर्शी थियो ?',
-        '३. विद्युत् आपूर्तिको गुणस्तर (भोल्टेज) राम्रो थियो ?',
-        '४. गुनासो/जडान समस्या समाधान समयमै भयो ?',
-        '५. कार्यालयको कर्मचारी व्यवहार सहयोगी थियो ?',
-        '६. महसुलको बिल स्पष्ट र सही थियो ?',
-        '७. अनलाइन महसुल तिर्ने/हेर्ने सुविधा प्रभावकारी थियो ?',
-        '८. लोडसेडिङ/अवरोधको समयमा सूचना प्रणाली प्रभावकारी थियो ?',
-        '९. विद्युत् सेवाको समग्र स्कोर (१–५)',
-        '१०. के तपाईं विद्युत् प्राधिकरणको सेवा सिफारिस गर्नुहुन्छ ?'
+        '१. सेवा सम्बन्धी सूचना तथा आवश्यक कागजातको जानकारी सहज रूपमा प्राप्त गर्नुभयो ?',
+        '२. सेवा प्रक्रिया स्पष्ट र बुझ्न सजिलो थियो ?',
+        '३. कर्मचारीले शिष्ट र सहयोगी व्यवहार गरे ?',
+        '४. सेवा निर्धारित समयभित्र प्राप्त गर्नुभयो ?',
+        '५. अनलाइन प्रणाली (FEIMS आदि) प्रभावकारी थियो ?',
+        '६. सेवा शुल्क तथा प्रक्रिया पारदर्शी थियो ?',
+        '७. अनावश्यक झन्झट वा धेरै पटक कार्यालय धाउनुपरेन ?',
+        '८. गुनासो वा जिज्ञासाको उचित सम्बोधन भयो ?',
+        '९. सेवा निष्पक्ष र पारदर्शी रूपमा प्रदान गरियो ?',
+        '१०. वैदेशिक रोजगार सेवाको समग्र स्कोर (१–५) ?'
       ]
     }, {
-      id: 'water',
-      icon: 'ward', // using 'ward' icon for water as a placeholder; original index2 used fa-water
-      name: 'खानेपानी तथा ढल निकास (नेपाल खानेपानी संस्थान)',
-      tag: 'खानेपानी जडान, महसुल, ढल',
+      id: 'industry',
+      icon: 'factory', 
+      name: 'उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालय',
+      tag: 'उद्योग दर्ता, कम्पनी दर्ता, कर दर्ता, कर भुक्तानी',
       q: [
-        '१. खानेपानी जडान/धाराको प्रक्रिया सहज थियो ?',
-        '२. पानीको गुणस्तर र आपूर्ति भरपर्दो थियो ?',
-        '३. महसुल/दस्तुर उचित र स्पष्ट थियो ?',
-        '४. मर्मत/गुनासो समाधान समयमै भयो ?',
-        '५. कर्मचारीको सहयोगशीलता उचित थियो ?',
-        '६. बिल/रसिद प्रणाली पारदर्शी थियो ?',
-        '७. अनलाइन/मोबाइल भुक्तानी सेवा प्रभावकारी थियो ?',
-        '८. ढल/निकास सेवाको पहुँच उपलब्ध थियो ?',
-        '९. खानेपानी सेवाको समग्र स्कोर (१–५)',
-        '१०. के तपाईं खानेपानी सेवा सिफारिस गर्नुहुन्छ ?'
+        '१. तपाईंले आवश्यक सेवा, प्रक्रिया र आवश्यक कागजात सम्बन्धी सूचना सहज रूपमा प्राप्त गर्नुभयो ?',
+        '२. सेवा प्राप्त गर्ने प्रक्रिया स्पष्ट, सरल र बुझ्न सजिलो थियो ?',
+        '३. कर्मचारीहरूले शिष्ट, सम्मानजनक र सहयोगी व्यवहार गरे ?',
+        '४. सेवा निर्धारित समयभित्र प्राप्त गर्नुभयो ?',
+        '५. सेवा शुल्क, कर वा दस्तुर सम्बन्धी जानकारी स्पष्ट र पारदर्शी थियो ?',
+        '६. अनलाइन सेवा, डिजिटल प्रणाली वा विद्युतीय माध्यम (लागू भएमा) प्रयोग गर्न सहज र प्रभावकारी थियो ?',
+        '७. सेवामा निष्पक्षता, पारदर्शिता तथा उत्तरदायित्वको अनुभव गर्नुभयो ?',
+        '८. गुनासो, सुझाव वा जिज्ञासा राख्ने तथा त्यसको सुनुवाइ हुने व्यवस्था प्रभावकारी थियो ?',
+        '९. सेवा प्राप्त गर्ने क्रममा अनावश्यक ढिलाइ, झन्झट वा अतिरिक्त खर्च व्यहोर्नुपरेन?',
+        '१०. उद्योग, वाणिज्य आपूर्ति र कर सम्बन्धी कार्यालयको सेवाको समग्र स्कोर (१–५) ?'
       ]
     }, {
       id: 'police',
@@ -1102,6 +1326,17 @@
       document.querySelectorAll('.office').forEach(d => d.open = open);
     }
 
+    function toggleOtherField(fieldId, checkbox) {
+      const field = document.getElementById(fieldId);
+      if (checkbox.checked) {
+        field.style.display = 'block';
+        field.focus();
+      } else {
+        field.style.display = 'none';
+        field.value = '';
+      }
+    }
+
     function clearOffice(id) {
       const d = document.querySelector(`.office[data-office="${id}"]`);
       d.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
@@ -1131,7 +1366,7 @@
     }
 
     // Replace this URL with your deployed Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJDrYM1l3P_ik41MKITS885SRpsoDjp6CMkhV9OUOdben2vVaz7Er9XtTfzVcQE_L7qw/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6dgalxlCh9AQH_-5s48fU_0qCdAODbCzp3meL0xLbMEcygwMs-qe1GYrZR28LLmC5pA/exec';
 
     function submitForm() {
       const summary = {};
@@ -1154,8 +1389,34 @@
       });
 
       const suggestion = document.getElementById('finalSuggestion').value.trim();
+
+      // Collect office ranking data
+      const goodOffices = [];
+      document.querySelectorAll('input[name="goodOffice"]:checked').forEach(cb => {
+        if (cb.value === 'अन्य') {
+          const otherValue = document.getElementById('goodOfficeOther').value.trim();
+          if (otherValue) {
+            goodOffices.push(otherValue);
+          }
+        } else {
+          goodOffices.push(cb.value);
+        }
+      });
+
+      const badOffices = [];
+      document.querySelectorAll('input[name="badOffice"]:checked').forEach(cb => {
+        if (cb.value === 'अन्य') {
+          const otherValue = document.getElementById('badOfficeOther').value.trim();
+          if (otherValue) {
+            badOffices.push(otherValue);
+          }
+        } else {
+          badOffices.push(cb.value);
+        }
+      });
+
       const box = document.getElementById('result');
-      if (answered === 0 && suggestion === '') {
+      if (answered === 0 && suggestion === '' && goodOffices.length === 0 && badOffices.length === 0) {
         box.className = 'show';
         box.innerHTML = `<h3>कुनै जवाफ भरिएको छैन</h3><p>कृपया कम्तिमा एउटा खण्ड खोलेर प्रश्नहरूको जवाफ दिनुहोस्।</p>`;
         return;
@@ -1165,7 +1426,9 @@
         जिल्ला_स्थानीय_तह: document.querySelectorAll('.meta-field input')[0].value,
         उमेर_समूह: document.querySelectorAll('.meta-field input')[1].value,
         मिति: toDevanagari(document.getElementById('nepali-datepicker').value),
-        सेवा_सुधार_सुझाव: suggestion
+        सेवा_सुधार_सुझाव: suggestion,
+        राम्रो_सेवा_कार्यालयहरू: goodOffices.join(', '),
+        खराब_सेवा_कार्यालयहरू: badOffices.join(', ')
       };
       const payload = { मेटाडाटा: meta, जवाफहरू: summary };
 
