@@ -1,6 +1,11 @@
 // Dashboard JavaScript for Customer Survey
 // Replace this URL with your deployed Google Apps Script Web App URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8HdpgkQveFRofvf1qM0z6Kwiu3A0-D3bnF5U087KV8lkSUGs8KaSWdLPCzsCLN6TC6A/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJDrYM1l3P_ik41MKITS885SRpsoDjp6CMkhV9OUOdben2vVaz7Er9XtTfzVcQE_L7qw/exec';
+
+// Pagination state
+let currentPage = 1;
+let itemsPerPage = 20;
+let tableData = [];
 
 // Office data from index.html
 const OFFICES = [{
@@ -115,7 +120,7 @@ const OFFICES = [{
     '७. अनलाइन/मोबाइल भुक्तानी सेवा प्रभावकारी थियो ?',
     '८. ढल/निकास सेवाको पहुँच उपलब्ध थियो ?',
     '९. खानेपानी सेवाको समग्र स्कोर (१–५)',
-    '१०. के तपाईं खानेपानी सेवा सिफारिस गर्नुहुन्छ ?'
+    
   ]
 }, {
   id: 'police',
@@ -150,6 +155,12 @@ const OFFICES = [{
 // Global variables for charts
 let officeChart, satisfactionChart, ageGroupChart, districtChart;
 let currentData = [];
+
+function toNepaliDigits(value) {
+  if (value === null || value === undefined) return '';
+  const map = { '0': '०', '1': '१', '2': '२', '3': '३', '4': '४', '5': '५', '6': '६', '7': '७', '8': '८', '9': '९' };
+  return String(value).split('').map(char => map[char] || char).join('');
+}
 
 // Initialize dashboard on load
 document.addEventListener('DOMContentLoaded', function() {
@@ -194,7 +205,7 @@ function initializeNepaliDatePicker() {
   if (typeof NepaliDatePicker !== 'undefined') {
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
-    
+
     if (startDateInput) {
       new NepaliDatePicker('#startDate', {
         format: 'YYYY-MM-DD',
@@ -203,12 +214,13 @@ function initializeNepaliDatePicker() {
         closeOnDateSelect: true,
         disableDaysBeforeToday: false,
         onChange: function(date) {
-          // Store Nepali date in data attribute for conversion
-          startDateInput.dataset.nepaliDate = date;
+          const nepaliDate = toNepaliDigits(date);
+          startDateInput.value = nepaliDate;
+          startDateInput.dataset.nepaliDate = nepaliDate;
         }
       });
     }
-    
+
     if (endDateInput) {
       new NepaliDatePicker('#endDate', {
         format: 'YYYY-MM-DD',
@@ -217,8 +229,9 @@ function initializeNepaliDatePicker() {
         closeOnDateSelect: true,
         disableDaysBeforeToday: false,
         onChange: function(date) {
-          // Store Nepali date in data attribute for conversion
-          endDateInput.dataset.nepaliDate = date;
+          const nepaliDate = toNepaliDigits(date);
+          endDateInput.value = nepaliDate;
+          endDateInput.dataset.nepaliDate = nepaliDate;
         }
       });
     }
@@ -280,11 +293,11 @@ function onProvinceChange() {
   const provinceId = document.getElementById('provinceFilter').value;
   const districtFilter = document.getElementById('districtFilter');
   const localLevelFilter = document.getElementById('localLevelFilter');
-  
+
   // Clear district and local level filters
   districtFilter.innerHTML = '<option value="all">सबै जिल्लाहरू</option>';
   localLevelFilter.innerHTML = '<option value="all">सबै स्थानीय तह</option>';
-  
+
   if (provinceId !== 'all' && window.nepalData && window.nepalData.DISTRICTS) {
     const districts = window.nepalData.DISTRICTS[provinceId] || [];
     districts.forEach(district => {
@@ -294,8 +307,6 @@ function onProvinceChange() {
       districtFilter.appendChild(option);
     });
   }
-  
-  applyFilters();
 }
 
 // Handle district change
@@ -303,10 +314,10 @@ function onDistrictChange() {
   const provinceId = document.getElementById('provinceFilter').value;
   const districtName = document.getElementById('districtFilter').value;
   const localLevelFilter = document.getElementById('localLevelFilter');
-  
+
   // Clear local level filter
   localLevelFilter.innerHTML = '<option value="all">सबै स्थानीय तह</option>';
-  
+
   if (provinceId !== 'all' && districtName !== 'all' && window.nepalData && window.nepalData.MUNICIPALITIES) {
     const municipalities = window.nepalData.MUNICIPALITIES[provinceId]?.[districtName] || [];
     municipalities.forEach(municipality => {
@@ -316,18 +327,16 @@ function onDistrictChange() {
       localLevelFilter.appendChild(option);
     });
   }
-  
-  applyFilters();
 }
 
 // Handle office change
 function onOfficeChange() {
   const officeId = document.getElementById('officeFilter').value;
   const questionFilter = document.getElementById('questionFilter');
-  
+
   // Clear question filter
   questionFilter.innerHTML = '<option value="all">सबै प्रश्नहरू</option>';
-  
+
   if (officeId !== 'all' && officeId !== 'other') {
     const office = OFFICES.find(o => o.id === officeId);
     if (office && office.q) {
@@ -339,8 +348,6 @@ function onOfficeChange() {
       });
     }
   }
-  
-  applyFilters();
 }
 
 // Load dashboard data from Apps Script
@@ -368,6 +375,7 @@ function updateDashboard(data, stats) {
   updateStatCards(stats);
   updateCharts(data, stats);
   updateTable(data);
+  updateDistrictMap(data, stats);
 }
 
 // Update stat cards
@@ -574,19 +582,278 @@ function updateCharts(data, stats) {
 
 // Update data table
 function updateTable(data) {
+  tableData = data;
+  currentPage = 1;
+  renderTable();
+}
+
+// Update district map
+let districtMap = null;
+
+function updateDistrictMap(data, stats) {
+  if (!districtMap) {
+    // Initialize map
+    districtMap = L.map('districtMap').setView([28.3949, 84.1240], 7);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(districtMap);
+  }
+
+  const districtStats = stats.districtStats || {};
+
+  const districtScores = {};
+  data.forEach(row => {
+    const districtSource = row.district || row.district_name || row.districtName || row.localLevel || row.local_level || row.locallevel || '';
+    const districtName = districtSource ? extractDistrictFromLocalLevel(districtSource) : null;
+
+    if (!districtName) return;
+
+    const normalizedDistrict = normalizeDistrictName(districtName);
+    if (!normalizedDistrict) return;
+
+    if (!districtScores[normalizedDistrict]) {
+      districtScores[normalizedDistrict] = { total: 0, count: 0 };
+    }
+
+    const rawScore = Number(row.q9 ?? row.q10 ?? row.score ?? row.satisfactionScore ?? row.satisfaction ?? NaN);
+    if (!Number.isNaN(rawScore)) {
+      districtScores[normalizedDistrict].total += rawScore;
+      districtScores[normalizedDistrict].count++;
+    }
+  });
+
+  const districtAverages = {};
+  for (const district in districtScores) {
+    if (districtScores[district].count > 0) {
+      districtAverages[district] = districtScores[district].total / districtScores[district].count;
+    }
+  }
+
+  const matchedDistrictMap = {};
+  Object.keys(districtScores).forEach(district => {
+    matchedDistrictMap[district] = district;
+  });
+
+  console.log('District stats from backend:', districtStats);
+  console.log('District scores calculated:', districtScores);
+  console.log('District averages:', districtAverages);
+
+  fetch('https://raw.githubusercontent.com/mesaugat/geoJSON-Nepal/master/nepal-districts-new.geojson')
+    .then(response => response.json())
+    .then(geojson => {
+      districtMap.eachLayer(layer => {
+        if (layer instanceof L.GeoJSON) {
+          districtMap.removeLayer(layer);
+        }
+      });
+
+      L.geoJSON(geojson, {
+        style: function(feature) {
+          const geoDistrictName = getGeoDistrictName(feature);
+          const matchedDistrict = findMatchingDistrict(geoDistrictName, districtAverages);
+          const avgScore = matchedDistrict ? districtAverages[matchedDistrict] : 0;
+
+          return {
+            fillColor: getColorForScore(avgScore),
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          const geoDistrictName = getGeoDistrictName(feature);
+          const matchedDistrict = findMatchingDistrict(geoDistrictName, districtAverages);
+          const avgScore = matchedDistrict ? districtAverages[matchedDistrict] : 0;
+          const count = matchedDistrict ? districtScores[matchedDistrict]?.count : 0;
+          const displayDistrictName = matchedDistrict || normalizeDistrictName(geoDistrictName) || geoDistrictName || 'Unknown';
+
+          layer.bindPopup(`
+            <strong>${displayDistrictName}</strong><br/>
+            सन्तुष्टि स्कोर: ${avgScore > 0 ? avgScore.toFixed(2) : 'N/A'}<br/>
+            प्रतिक्रिया संख्या: ${count || 0}
+          `);
+        }
+      }).addTo(districtMap);
+    })
+    .catch(error => {
+      console.error('Error loading GeoJSON:', error);
+    });
+}
+
+// Extract district name from local level string
+function extractDistrictFromLocalLevel(localLevelStr) {
+  if (!localLevelStr || typeof localLevelStr !== 'string') return null;
+
+  const cleaned = localLevelStr.trim();
+  if (!cleaned) return null;
+
+  if (window.nepalData && window.nepalData.DISTRICTS) {
+    for (const provinceId in window.nepalData.DISTRICTS) {
+      const districts = window.nepalData.DISTRICTS[provinceId] || [];
+      for (const district of districts) {
+        if (cleaned.includes(district) || district.includes(cleaned)) {
+          return district;
+        }
+      }
+    }
+  }
+
+  if (window.nepalData && window.nepalData.MUNICIPALITIES) {
+    for (const provinceId in window.nepalData.MUNICIPALITIES) {
+      const municipalitiesByDistrict = window.nepalData.MUNICIPALITIES[provinceId] || {};
+      for (const district in municipalitiesByDistrict) {
+        const municipalities = municipalitiesByDistrict[district] || [];
+        for (const municipality of municipalities) {
+          if (cleaned.includes(municipality) || municipality.includes(cleaned)) {
+            return district;
+          }
+        }
+      }
+    }
+  }
+
+  return cleaned;
+}
+
+function getGeoDistrictName(feature) {
+  if (!feature || !feature.properties) return null;
+
+  const props = feature.properties;
+  const preferredKeys = ['DIST_EN', 'DIST_ALT1E', 'DIST_ALT2E', 'DISTRICT', 'district', 'District', 'NAME', 'name', 'district_name', 'districtName'];
+  for (const key of preferredKeys) {
+    if (props[key]) {
+      return props[key];
+    }
+  }
+
+  const fallbackKey = Object.keys(props).find(key => /district/i.test(key) || /name/i.test(key));
+  return fallbackKey ? props[fallbackKey] : null;
+}
+
+// Normalize district name for matching with GeoJSON
+function normalizeDistrictName(districtName) {
+  if (!districtName || typeof districtName !== 'string') return null;
+
+  const cleaned = districtName.trim().replace(/\s+/g, ' ');
+  if (!cleaned) return null;
+
+  const normalizeAlias = value => String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z\u0900-\u097f]/g, '');
+
+  const districtAliasMap = {};
+
+  if (window.nepalData && window.nepalData.DISTRICTS) {
+    Object.values(window.nepalData.DISTRICTS).flat().forEach(district => {
+      const alias = normalizeAlias(district);
+      if (alias) districtAliasMap[alias] = district;
+    });
+  }
+
+  if (window.DISTRICT_NAME_MAP) {
+    Object.entries(window.DISTRICT_NAME_MAP).forEach(([englishKey, nepaliName]) => {
+      const englishAlias = normalizeAlias(englishKey);
+      const nepaliAlias = normalizeAlias(nepaliName);
+      if (englishAlias) districtAliasMap[englishAlias] = nepaliName;
+      if (nepaliAlias) districtAliasMap[nepaliAlias] = nepaliName;
+    });
+  }
+
+  const alias = normalizeAlias(cleaned);
+  if (districtAliasMap[alias]) {
+    return districtAliasMap[alias];
+  }
+
+  const directMatch = Object.values(window.nepalData?.DISTRICTS || {}).flat().find(district => normalizeAlias(district) === alias);
+  if (directMatch) {
+    return directMatch;
+  }
+
+  const englishFallback = Object.entries(window.DISTRICT_NAME_MAP || {}).find(([englishKey, nepaliName]) => normalizeAlias(englishKey) === alias);
+  if (englishFallback) {
+    return englishFallback[1];
+  }
+
+  return cleaned;
+}
+
+function districtKeyMatch(a, b) {
+  if (!a || !b) return false;
+  const normalize = value => String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z\u0900-\u097f]/g, '');
+
+  return normalize(a) === normalize(b);
+}
+
+// Find matching district name (flexible matching)
+function findMatchingDistrict(geoDistrictName, districtAverages) {
+  if (!geoDistrictName || !districtAverages) return null;
+
+  if (districtAverages[geoDistrictName]) {
+    return geoDistrictName;
+  }
+
+  const normalizedGeoDistrict = normalizeDistrictName(geoDistrictName);
+  if (normalizedGeoDistrict && districtAverages[normalizedGeoDistrict]) {
+    return normalizedGeoDistrict;
+  }
+
+  for (const district in districtAverages) {
+    if (districtKeyMatch(district, geoDistrictName) || districtKeyMatch(district, normalizedGeoDistrict)) {
+      return district;
+    }
+  }
+
+  if (window.nepalData && window.nepalData.DISTRICTS) {
+    for (const provinceId in window.nepalData.DISTRICTS) {
+      const districts = window.nepalData.DISTRICTS[provinceId] || [];
+      for (const district of districts) {
+        if (districtKeyMatch(district, geoDistrictName) || districtKeyMatch(district, normalizedGeoDistrict)) {
+          return normalizeDistrictName(district);
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+// Get color based on satisfaction score (1-5 scale)
+function getColorForScore(score) {
+  if (score >= 4.5) return '#22c55e'; // Green - Very satisfied
+  if (score >= 3.5) return '#86efac'; // Light green - Satisfied
+  if (score >= 2.5) return '#fbbf24'; // Yellow - Neutral
+  if (score >= 1.5) return '#fb923c'; // Orange - Dissatisfied
+  return '#ef4444'; // Red - Very dissatisfied
+}
+
+// Render table with pagination
+function renderTable() {
   const tbody = document.getElementById('tableBody');
-  
-  if (data.length === 0) {
+
+  if (tableData.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" class="no-data">कुनै डाटा छैन</td></tr>';
+    updatePaginationInfo();
     return;
   }
-  
-  tbody.innerHTML = data.map(row => {
-    const date = new Date(row.timestamp).toLocaleDateString('ne-NP');
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const pageData = tableData.slice(startIndex, endIndex);
+
+  tbody.innerHTML = pageData.map(row => {
+    const date = row.serviceDate || new Date(row.timestamp).toLocaleDateString('ne-NP');
     const score = row.q9 || row.q10 || 'N/A';
     const problem = row.problem ? row.problem.substring(0, 50) + (row.problem.length > 50 ? '...' : '') : '-';
     const suggestion = row.suggestion ? row.suggestion.substring(0, 50) + (row.suggestion.length > 50 ? '...' : '') : '-';
-    
+
     return `
       <tr>
         <td>${date}</td>
@@ -599,6 +866,78 @@ function updateTable(data) {
       </tr>
     `;
   }).join('');
+
+  updatePaginationInfo();
+}
+
+// Update pagination info and controls
+function updatePaginationInfo() {
+  const totalItems = tableData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+
+  const infoText = totalItems > 0
+    ? `${toDevanagari(startIndex)} - ${toDevanagari(endIndex)} कुल ${toDevanagari(totalItems)}`
+    : '० - ० कुल ०';
+
+  document.getElementById('paginationInfo').textContent = infoText;
+
+  // Update page numbers
+  const pageNumbers = document.getElementById('pageNumbers');
+  pageNumbers.innerHTML = '';
+
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  if (endPage - startPage < maxVisiblePages - 1) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = toDevanagari(i);
+    btn.onclick = () => goToPage(i);
+    if (i === currentPage) {
+      btn.classList.add('active');
+    }
+    pageNumbers.appendChild(btn);
+  }
+
+  // Update prev/next buttons
+  document.getElementById('prevPage').disabled = currentPage === 1;
+  document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
+}
+
+// Go to specific page
+function goToPage(page) {
+  currentPage = page;
+  renderTable();
+}
+
+// Previous page
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderTable();
+  }
+}
+
+// Next page
+function nextPage() {
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderTable();
+  }
+}
+
+// Change items per page
+function changeItemsPerPage() {
+  itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+  currentPage = 1;
+  renderTable();
 }
 
 // Populate filter dropdowns
@@ -656,11 +995,11 @@ async function applyFilters() {
   const officeId = document.getElementById('officeFilter').value;
   const ageGroup = document.getElementById('ageGroupFilter').value;
   
-  // Convert Nepali dates to English dates for backend filtering
+  // Use Nepali dates directly (BS format YYYY-MM-DD)
   const startDateInput = document.getElementById('startDate');
   const endDateInput = document.getElementById('endDate');
-  const startDate = startDateInput.dataset.nepaliDate ? nepaliToEnglish(startDateInput.dataset.nepaliDate) : startDateInput.value;
-  const endDate = endDateInput.dataset.nepaliDate ? nepaliToEnglish(endDateInput.dataset.nepaliDate) : endDateInput.value;
+  const startDate = startDateInput.dataset.nepaliDate || startDateInput.value;
+  const endDate = endDateInput.dataset.nepaliDate || endDateInput.value;
   
   const questionFilter = document.getElementById('questionFilter').value;
   const problemFilter = document.getElementById('problemFilter').value;
@@ -688,7 +1027,9 @@ function resetFilters() {
   document.getElementById('officeFilter').value = 'all';
   document.getElementById('ageGroupFilter').value = 'all';
   document.getElementById('startDate').value = '';
+  document.getElementById('startDate').dataset.nepaliDate = '';
   document.getElementById('endDate').value = '';
+  document.getElementById('endDate').dataset.nepaliDate = '';
   document.getElementById('questionFilter').innerHTML = '<option value="all">सबै प्रश्नहरू</option>';
   document.getElementById('problemFilter').value = 'all';
   document.getElementById('suggestionFilter').value = 'all';
@@ -698,12 +1039,18 @@ function resetFilters() {
 // Filter table by search
 function filterTable() {
   const searchTerm = document.getElementById('tableSearch').value.toLowerCase();
-  const rows = document.querySelectorAll('#tableBody tr');
-  
-  rows.forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(searchTerm) ? '' : 'none';
-  });
+
+  if (searchTerm === '') {
+    tableData = currentData;
+  } else {
+    tableData = currentData.filter(row => {
+      const text = Object.values(row).join(' ').toLowerCase();
+      return text.includes(searchTerm);
+    });
+  }
+
+  currentPage = 1;
+  renderTable();
 }
 
 // Export data to CSV
@@ -712,12 +1059,12 @@ function exportData() {
     alert('निर्यात गर्नका लागि कुनै डाटा छैन');
     return;
   }
-  
+
   const headers = ['मिति', 'कार्यालय', 'जिल्ला/स्थानीय तह', 'उमेर समूह', 'सन्तुष्टि स्कोर', 'समस्या', 'सुझाव'];
   const csvContent = [
     headers.join(','),
     ...currentData.map(row => {
-      const date = new Date(row.timestamp).toLocaleDateString('ne-NP');
+      const date = row.serviceDate || new Date(row.timestamp).toLocaleDateString('ne-NP');
       const score = row.q9 || row.q10 || 'N/A';
       return [
         `"${date}"`,
@@ -730,8 +1077,10 @@ function exportData() {
       ].join(',');
     })
   ].join('\n');
-  
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Add UTF-8 BOM for proper Nepali character display in Excel
+  const bom = '\uFEFF';
+  const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = 'survey_data.csv';

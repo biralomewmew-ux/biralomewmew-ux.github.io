@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="nepalData.js"></script>
   <link rel="stylesheet" href="dashboard.css" />
   <script>
@@ -66,7 +69,7 @@
           </div>
           <div class="filter-group">
             <label>स्थानीय तह</label>
-            <select id="localLevelFilter" onchange="applyFilters()">
+            <select id="localLevelFilter">
               <option value="all">सबै स्थानीय तह</option>
             </select>
           </div>
@@ -78,38 +81,44 @@
           </div>
           <div class="filter-group">
             <label>उमेर समूह</label>
-            <select id="ageGroupFilter" onchange="applyFilters()">
+            <select id="ageGroupFilter">
               <option value="all">सबै</option>
             </select>
           </div>
           <div class="filter-group">
             <label>सुरु मिति</label>
-            <input type="date" id="startDate" onchange="applyFilters()" />
+            <input type="text" id="startDate" placeholder="२०८३-०४-०७" readonly />
           </div>
           <div class="filter-group">
             <label>अन्त्य मिति</label>
-            <input type="date" id="endDate" onchange="applyFilters()" />
+            <input type="text" id="endDate" placeholder="२०८३-०४-०७" readonly />
           </div>
           <div class="filter-group">
             <label>प्रश्न अनुसार</label>
-            <select id="questionFilter" onchange="applyFilters()">
+            <select id="questionFilter">
               <option value="all">सबै प्रश्नहरू</option>
             </select>
           </div>
           <div class="filter-group">
             <label>समस्या अनुसार</label>
-            <select id="problemFilter" onchange="applyFilters()">
+            <select id="problemFilter">
               <option value="all">सबै समस्याहरू</option>
             </select>
           </div>
           <div class="filter-group">
             <label>सुझाव अनुसार</label>
-            <select id="suggestionFilter" onchange="applyFilters()">
+            <select id="suggestionFilter">
               <option value="all">सबै सुझावहरू</option>
             </select>
           </div>
           <div class="filter-group">
             <label>&nbsp;</label>
+            <button class="filter-btn" onclick="applyFilters()">फिल्टर गर्नुहोस्</button>
+            <!-- <button class="reset-btn" onclick="resetFilters()">रिसेट गर्नुहोस्</button> -->
+          </div>
+          <div class="filter-group">
+            <label>&nbsp;</label>
+            <!-- <button class="filter-btn" onclick="applyFilters()">फिल्टर गर्नुहोस्</button> -->
             <button class="reset-btn" onclick="resetFilters()">रिसेट गर्नुहोस्</button>
           </div>
         </div>
@@ -196,13 +205,20 @@
         </div>
       </div>
 
+      <div class="charts-section">
+        <div class="chart-container map-container">
+          <h3>जिल्लागत विवरण-नक्सामा</h3>
+          <div id="districtMap" style="height: 400px; width: 100%;"></div>
+        </div>
+      </div>
+
       <!-- Data Table -->
       <div class="table-section">
         <div class="table-header">
           <h3>विस्तृत डाटा</h3>
           <div class="table-actions">
             <input type="text" id="tableSearch" placeholder="खोज्नुहोस्..." наkeyup="filterTable()" />
-            <button onclick="exportData()">निर्यात गर्नुहोस्</button>
+            <button onclick="exportData()">Excel Export</button>
           </div>
         </div>
         <div class="table-wrapper">
@@ -224,6 +240,21 @@
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="pagination">
+          <div class="pagination-info">
+            <span id="paginationInfo">० - ० कुल ०</span>
+          </div>
+          <div class="pagination-controls">
+            <select id="itemsPerPage" onchange="changeItemsPerPage()">
+              <option value="20">२० प्रति पृष्ठ</option>
+              <option value="50">५० प्रति पृष्ठ</option>
+              <option value="100">१०० प्रति पृष्ठ</option>
+            </select>
+            <button id="prevPage" onclick="prevPage()" disabled>अघिल्लो</button>
+            <span id="pageNumbers"></span>
+            <button id="nextPage" onclick="nextPage()" disabled>पछिल्लो</button>
+          </div>
         </div>
       </div>
     </div>

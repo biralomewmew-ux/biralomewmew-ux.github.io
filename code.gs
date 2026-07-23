@@ -60,6 +60,9 @@ function saveSurveyData(data) {
   const metadata = data.मेटाडाटा || {};
   const responses = data.जवाफहरू || {};
   
+  const serviceDateValue = (metadata.मिति || '').toString().trim();
+  const normalizedServiceDate = serviceDateValue ? "'" + serviceDateValue : "";
+  
   const rows = [];
   
   // Iterate through each office's responses
@@ -71,7 +74,7 @@ function saveSurveyData(data) {
       timestamp,
       metadata.जिल्ला_स्थानीय_तह || "",
       metadata.उमेर_समूह || "",
-      metadata.मिति || "",
+      normalizedServiceDate,
       metadata.सेवा_सुधार_सुझाव || "",
       officeId,
       officeName,
@@ -94,6 +97,7 @@ function saveSurveyData(data) {
   
   if (rows.length > 0) {
     sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
+    sheet.getRange(2, 4, sheet.getLastRow() - 1, 1).setNumberFormat('@');
   }
   
   return { success: true, message: "Data saved successfully" };
@@ -246,13 +250,23 @@ function getFilteredData(filters) {
   
   if (filters.startDate) {
     filteredData = filteredData.filter(row => {
+      // Compare with service date (BS format YYYY-MM-DD)
+      if (row.serviceDate) {
+        return row.serviceDate >= filters.startDate;
+      }
+      // Fallback to timestamp if service date not available
       const rowDate = new Date(row.timestamp);
       return rowDate >= new Date(filters.startDate);
     });
   }
-  
+
   if (filters.endDate) {
     filteredData = filteredData.filter(row => {
+      // Compare with service date (BS format YYYY-MM-DD)
+      if (row.serviceDate) {
+        return row.serviceDate <= filters.endDate;
+      }
+      // Fallback to timestamp if service date not available
       const rowDate = new Date(row.timestamp);
       return rowDate <= new Date(filters.endDate);
     });

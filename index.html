@@ -1131,7 +1131,7 @@
     }
 
     // Replace this URL with your deployed Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8HdpgkQveFRofvf1qM0z6Kwiu3A0-D3bnF5U087KV8lkSUGs8KaSWdLPCzsCLN6TC6A/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJDrYM1l3P_ik41MKITS885SRpsoDjp6CMkhV9OUOdben2vVaz7Er9XtTfzVcQE_L7qw/exec';
 
     function submitForm() {
       const summary = {};
@@ -1164,7 +1164,7 @@
       const meta = {
         जिल्ला_स्थानीय_तह: document.querySelectorAll('.meta-field input')[0].value,
         उमेर_समूह: document.querySelectorAll('.meta-field input')[1].value,
-        मिति: document.getElementById('nepali-datepicker').value,
+        मिति: toDevanagari(document.getElementById('nepali-datepicker').value),
         सेवा_सुधार_सुझाव: suggestion
       };
       const payload = { मेटाडाटा: meta, जवाफहरू: summary };
@@ -1189,7 +1189,7 @@
         box.innerHTML = `
           <h3>धन्यवाद! तपाईंको प्रतिक्रिया संकलन भयो।</h3>
           <p>कुल ${toDevanagari(answered)} प्रश्नको जवाफ भरिएको छ, ${toDevanagari(Object.keys(summary).length)} वटा कार्यालय/निकाय समेटिएको छ।</p>
-          <p>डाटा Google Sheets मा सेभ भयो।</p>
+          <p>डाटा सेभ भयो।</p>
           <p><a href="${url}" download="sewa_santusti_jawaph.json">जवाफहरूको JSON फाइल डाउनलोड गर्नुहोस्</a></p>
         `;
         box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1228,11 +1228,15 @@
     }
 
     // Initialize Nepali Date Picker
-    new NepaliDatePicker('#nepali-datepicker', {
+    const datePicker = new NepaliDatePicker('#nepali-datepicker', {
       format: 'YYYY-MM-DD',
       mode: 'basic',
       locale: 'np',
-      theme: 'flat'
+      theme: 'flat',
+      onChange: function(date) {
+        // Ensure input value stays in BS format (YYYY-MM-DD) using Nepali digits
+        document.getElementById('nepali-datepicker').value = toDevanagari(date);
+      }
     });
 
     updateProgress();
