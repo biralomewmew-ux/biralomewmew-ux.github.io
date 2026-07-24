@@ -96,7 +96,8 @@
       background:
         linear-gradient(rgba(251, 248, 240, 0.78), rgba(251, 248, 240, 0.82)),
         url('homepage-bg.webp') center/cover no-repeat;
-      overflow: hidden;
+      overflow: visible;
+      z-index: 10;
     }
 
     .dashboard-btn {
@@ -457,6 +458,48 @@
 
     .office[open] .chev {
       transform: rotate(45deg);
+    }
+
+    .office-progress {
+      font-size: 13px;
+      font-weight: normal;
+      color: var(--ink-soft);
+      margin-left: 8px;
+      background: var(--paper-deep);
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      display: inline-block;
+      vertical-align: middle;
+      font-family: "Mukta", sans-serif;
+    }
+
+    .check-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ok);
+      font-size: 15px;
+      font-weight: bold;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: rgba(62, 122, 76, 0.12);
+      width: 0;
+      height: 26px;
+      border-radius: 50%;
+      border: 0 solid var(--ok);
+      overflow: hidden;
+      margin-right: 0;
+      flex-shrink: 0;
+    }
+
+    .check-mark.visible {
+      opacity: 1;
+      transform: scale(1);
+      width: 26px;
+      margin-right: 8px;
+      border-width: 1.5px;
     }
 
     .qwrap {
@@ -1004,7 +1047,11 @@
 
     /* Theme override for @anuz-pandey/nepali-date-picker dropdown */
     .ap-card {
-      position: relative !important;
+      position: absolute !important;
+      right: 0 !important;
+      left: auto !important;
+      max-width: 95vw !important;
+      box-sizing: border-box !important;
       font-family: "Mukta", "Kalimati", "Noto Sans Devanagari", sans-serif !important;
       background: var(--card) !important;
       border: 1px solid var(--line) !important;
@@ -1606,9 +1653,10 @@
       summary.innerHTML = `
         <span class="icon-badge"><svg width="22" height="22" viewBox="0 0 32 32">${ICONS[off.icon] || ICONS.doc}</svg></span>
         <span class="office-title">
-          <h2>${off.name}</h2>
+          <h2>${off.name} <span class="office-progress" id="${off.id}_progress_text">(०/${toDevanagari(off.q.length)} भरिएको)</span></h2>
           <small>${off.tag}</small>
         </span>
+        <span class="check-mark" id="${off.id}_check">✓</span>
         <span class="chev">+</span>
       `;
       details.appendChild(summary);
@@ -1700,18 +1748,40 @@
       d.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
       d.querySelectorAll('textarea').forEach(t => t.value = '');
       updateProgress();
+      saveDraft();
     }
 
-    const TOTAL = OFFICES.length * 10;
+    const TOTAL = OFFICES.reduce((acc, off) => acc + off.q.length, 0);
 
     function updateProgress() {
       let answered = 0;
       OFFICES.forEach(off => {
+        let officeAnswered = 0;
         off.q.forEach((item, qi) => {
           const name = `${off.id}_q${qi + 1}`;
-          if (document.querySelector(`input[name="${name}"]:checked`)) answered++;
+          if (document.querySelector(`input[name="${name}"]:checked`)) {
+            officeAnswered++;
+          }
         });
+        answered += officeAnswered;
+
+        // Individual office progress text
+        const progressTextEl = document.getElementById(`${off.id}_progress_text`);
+        if (progressTextEl) {
+          progressTextEl.textContent = `(${toDevanagari(officeAnswered)}/${toDevanagari(off.q.length)} भरिएको)`;
+        }
+
+        // Green checkmark indicator visibility when all questions of this office are filled
+        const checkEl = document.getElementById(`${off.id}_check`);
+        if (checkEl) {
+          if (officeAnswered === off.q.length) {
+            checkEl.classList.add('visible');
+          } else {
+            checkEl.classList.remove('visible');
+          }
+        }
       });
+
       const pct = Math.round((answered / TOTAL) * 100);
       document.getElementById('progressFill').style.width = pct + '%';
       document.getElementById('progressText').textContent = toDevanagari(answered) + ' / ' + toDevanagari(TOTAL) +
@@ -1827,6 +1897,20 @@
           document.getElementById('finalSuggestion').value = '';
           document.querySelectorAll('.meta-field input, .meta-field select').forEach(el => el.value = '');
           document.getElementById('professionOther').style.display = 'none';
+          
+          // Clear and reset office ranking checkboxes
+          document.querySelectorAll('input[name="goodOffice"], input[name="badOffice"]').forEach(cb => {
+            cb.checked = false;
+            cb.disabled = false;
+          });
+          document.getElementById('goodOfficeOther').style.display = 'none';
+          document.getElementById('goodOfficeOther').value = '';
+          document.getElementById('badOfficeOther').style.display = 'none';
+          document.getElementById('badOfficeOther').value = '';
+
+          // Remove draft from local storage
+          localStorage.removeItem(DRAFT_KEY);
+
           updateProgress();
         })
         .catch(error => {
@@ -1861,13 +1945,173 @@
       mode: 'basic',
       locale: 'np',
       theme: 'flat',
+      position: 'right',
       onChange: function (date) {
         // Ensure input value stays in BS format (YYYY-MM-DD) using Nepali digits
         document.getElementById('nepali-datepicker').value = toDevanagari(date);
+        queueSaveDraft();
       }
     });
 
-    updateProgress();
+    // Enforce 3 Best / 3 Worst Offices Limit
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.type === 'checkbox' && (e.target.name === 'goodOffice' || e.target.name === 'badOffice')) {
+        const name = e.target.name;
+        const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+        
+        if (checkedBoxes.length > 3) {
+          e.target.checked = false;
+          alert("तपाईंले अधिकतम ३ वटा मात्र छनोट गर्न सक्नुहुन्छ");
+          if (e.target.value === 'अन्य') {
+            const otherFieldId = name === 'goodOffice' ? 'goodOfficeOther' : 'badOfficeOther';
+            toggleOtherField(otherFieldId, e.target);
+          }
+          return;
+        }
+      }
+    });
+
+    const DRAFT_KEY = 'survey_draft';
+    let saveTimeout;
+
+    function queueSaveDraft() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(saveDraft, 500);
+    }
+
+    function saveDraft() {
+      const data = {
+        meta: {
+          district: document.getElementById('district-input').value,
+          ageGroup: document.getElementById('ageGroup').value,
+          profession: document.getElementById('profession').value,
+          professionOther: document.getElementById('professionOther').value,
+          date: document.getElementById('nepali-datepicker').value,
+        },
+        answers: {},
+        officeNotes: {},
+        rankings: {
+          goodOffices: [],
+          goodOfficeOther: document.getElementById('goodOfficeOther').value,
+          badOffices: [],
+          badOfficeOther: document.getElementById('badOfficeOther').value,
+        },
+        finalSuggestion: document.getElementById('finalSuggestion').value
+      };
+
+      // Collect office radio answers
+      OFFICES.forEach(off => {
+        off.q.forEach((item, qi) => {
+          const name = `${off.id}_q${qi + 1}`;
+          const checked = document.querySelector(`input[name="${name}"]:checked`);
+          if (checked) {
+            data.answers[name] = checked.value;
+          }
+        });
+
+        // Collect problems/suggestions
+        const prob = document.getElementById(`${off.id}_problem`)?.value;
+        const sug = document.getElementById(`${off.id}_suggestion`)?.value;
+        if (prob) data.officeNotes[`${off.id}_problem`] = prob;
+        if (sug) data.officeNotes[`${off.id}_suggestion`] = sug;
+      });
+
+      // Collect rankings
+      document.querySelectorAll('input[name="goodOffice"]:checked').forEach(cb => {
+        data.rankings.goodOffices.push(cb.value);
+      });
+      document.querySelectorAll('input[name="badOffice"]:checked').forEach(cb => {
+        data.rankings.badOffices.push(cb.value);
+      });
+
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    }
+
+    function loadDraft() {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (!saved) {
+        updateProgress();
+        return;
+      }
+
+      try {
+        const data = JSON.parse(saved);
+
+        // Restore meta
+        if (data.meta) {
+          document.getElementById('district-input').value = data.meta.district || '';
+          document.getElementById('ageGroup').value = data.meta.ageGroup || '';
+          document.getElementById('profession').value = data.meta.profession || '';
+          document.getElementById('professionOther').value = data.meta.professionOther || '';
+          toggleProfessionOther();
+          document.getElementById('nepali-datepicker').value = data.meta.date || '';
+        }
+
+        // Restore radio answers
+        if (data.answers) {
+          for (const [name, val] of Object.entries(data.answers)) {
+            const radio = document.querySelector(`input[name="${name}"][value="${val}"]`);
+            if (radio) radio.checked = true;
+          }
+        }
+
+        // Restore office problems & suggestions
+        if (data.officeNotes) {
+          for (const [id, val] of Object.entries(data.officeNotes)) {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+          }
+        }
+
+        // Restore rankings
+        if (data.rankings) {
+          if (data.rankings.goodOffices) {
+            data.rankings.goodOffices.forEach(val => {
+              const cb = document.querySelector(`input[name="goodOffice"][value="${val}"]`);
+              if (cb) {
+                cb.checked = true;
+                if (val === 'अन्य') {
+                  const otherField = document.getElementById('goodOfficeOther');
+                  otherField.style.display = 'block';
+                  otherField.value = data.rankings.goodOfficeOther || '';
+                }
+              }
+            });
+          }
+
+          if (data.rankings.badOffices) {
+            data.rankings.badOffices.forEach(val => {
+              const cb = document.querySelector(`input[name="badOffice"][value="${val}"]`);
+              if (cb) {
+                cb.checked = true;
+                if (val === 'अन्य') {
+                  const otherField = document.getElementById('badOfficeOther');
+                  otherField.style.display = 'block';
+                  otherField.value = data.rankings.badOfficeOther || '';
+                }
+              }
+            });
+          }
+        }
+
+        // Restore final suggestion
+        if (data.finalSuggestion) {
+          document.getElementById('finalSuggestion').value = data.finalSuggestion;
+        }
+
+        updateProgress();
+      } catch (e) {
+        console.error("Failed to load draft:", e);
+        updateProgress();
+      }
+    }
+
+    // Attach event listeners for change/input to trigger auto-saving
+    document.addEventListener('change', queueSaveDraft);
+    document.addEventListener('input', queueSaveDraft);
+
+    // Initial draft load
+    loadDraft();
   </script>
 </body>
 

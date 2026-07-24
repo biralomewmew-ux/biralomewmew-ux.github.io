@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="ne">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>सार्वजनिक सेवा सन्तुष्टि ड्यासबोर्ड</title>
   <link rel="icon" type="image/webp" href="emblem.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&family=Kalimati:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Nepali Date Picker CSS & JS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.min.css" />
+  <script
+    src="https://cdn.jsdelivr.net/npm/@anuz-pandey/nepali-date-picker/dist/nepali-date-picker.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -24,6 +30,7 @@
     }
   </script>
 </head>
+
 <body>
   <div class="dashboard-container">
     <header class="dashboard-header">
@@ -34,7 +41,7 @@
         <div class="headline-lines">
           <span class="line1">राष्ट्रिय सतर्कता केन्द्र</span>
           <span class="line3">सार्वजनिक सेवा सन्तुष्टि सर्वेक्षण</span>
-          <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>          
+          <span class="line2">सेवाग्राही प्रतिक्रिया ड्यासबोर्ड</span>
         </div>
       </div>
       <button class="refresh-btn" onclick="loadDashboardData()" title="डाटा रिफ्रेस गर्नुहोस्">
@@ -270,11 +277,16 @@
           <table id="dataTable">
             <thead>
               <tr>
-                <th onclick="sortTable('serviceDate')" class="sortable" data-column="serviceDate">मिति <span class="sort-icon"></span></th>
-                <th onclick="sortTable('officeName')" class="sortable" data-column="officeName">कार्यालय <span class="sort-icon"></span></th>
-                <th onclick="sortTable('district')" class="sortable" data-column="district">जिल्ला/स्थानीय तह <span class="sort-icon"></span></th>
-                <th onclick="sortTable('ageGroup')" class="sortable" data-column="ageGroup">उमेर समूह <span class="sort-icon"></span></th>
-                <th onclick="sortTable('score')" class="sortable" data-column="score">सन्तुष्टि स्कोर <span class="sort-icon"></span></th>
+                <th onclick="sortTable('serviceDate')" class="sortable" data-column="serviceDate">मिति <span
+                    class="sort-icon"></span></th>
+                <th onclick="sortTable('officeName')" class="sortable" data-column="officeName">कार्यालय <span
+                    class="sort-icon"></span></th>
+                <th onclick="sortTable('district')" class="sortable" data-column="district">जिल्ला/स्थानीय तह <span
+                    class="sort-icon"></span></th>
+                <th onclick="sortTable('ageGroup')" class="sortable" data-column="ageGroup">उमेर समूह <span
+                    class="sort-icon"></span></th>
+                <th onclick="sortTable('score')" class="sortable" data-column="score">सन्तुष्टि स्कोर <span
+                    class="sort-icon"></span></th>
                 <th>समस्या</th>
                 <th>सुझाव</th>
               </tr>
@@ -307,4 +319,5 @@
 
   <script src="dashboard.js"></script>
 </body>
+
 </html>
