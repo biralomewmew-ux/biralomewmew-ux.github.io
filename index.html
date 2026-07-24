@@ -336,7 +336,7 @@
     .intro-note {
       margin: 18px 32px 0;
       background: var(--paper-deep);
-      border-left: 3px solid var(--gold);
+      border-left: 1px solid var(--gold);
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 13.5px;
@@ -348,7 +348,7 @@
     .notice {
       margin: 12px 32px 12px;
       background: var(--paper-deep);
-      border-left: 3px solid var(--gold);
+      border-left: 1px solid var(--gold);
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 13.5px;
@@ -692,15 +692,21 @@
       gap: 12px;
       border-bottom: 1px solid transparent;
       user-select: none;
-      transition: background 0.2s ease;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      margin-bottom: 0;
     }
 
     .office-ranking-section[open] .ranking-header {
-      border-bottom-color: var(--line);
+      border-bottom-color: transparent;
+      border-radius: 8px 8px 0 0;
     }
 
     .ranking-header:hover {
-      background: var(--paper-deep);
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
     .ranking-header::-webkit-details-marker {
@@ -708,21 +714,24 @@
     }
 
     .ranking-icon {
-      color: var(--indigo);
+      color: #ffffff;
       flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .ranking-header span {
       flex: 1;
       font-size: 15px;
       font-weight: 600;
-      color: var(--ink);
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .ranking-header .chevron {
-      color: var(--ink-soft);
+      color: #ffffff;
       transition: transform 0.25s ease;
       flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .office-ranking-section[open] .ranking-header .chevron {
@@ -731,7 +740,10 @@
 
     .ranking-question {
       margin-bottom: 20px;
-      padding: 0 20px 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 0 0 8px 8px;
+      border-left: 1px solid #667eea;
     }
 
     .ranking-question:last-child {
@@ -742,8 +754,12 @@
       display: block;
       font-size: 14px;
       font-weight: 600;
-      color: var(--ink);
+      color: #2c3e50;
       margin-bottom: 12px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .ranking-options {
@@ -1759,6 +1775,34 @@
         const progressTextEl = document.getElementById(`${off.id}_progress_text`);
         if (progressTextEl) {
           progressTextEl.textContent = `(${toDevanagari(officeAnswered)}/${toDevanagari(off.q.length)} भरिएको)`;
+
+          // Dynamic background color based on progress
+          const progressPercent = officeAnswered / off.q.length;
+          if (progressPercent === 0) {
+            progressTextEl.style.background = 'transparent';
+            progressTextEl.style.padding = '0';
+            progressTextEl.style.borderRadius = '0';
+          } else if (progressPercent < 0.33) {
+            progressTextEl.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a5a)';
+            progressTextEl.style.padding = '4px 8px';
+            progressTextEl.style.borderRadius = '12px';
+            progressTextEl.style.color = '#ffffff';
+          } else if (progressPercent < 0.66) {
+            progressTextEl.style.background = 'linear-gradient(135deg, #feca57, #ff9f43)';
+            progressTextEl.style.padding = '4px 8px';
+            progressTextEl.style.borderRadius = '12px';
+            progressTextEl.style.color = '#ffffff';
+          } else if (progressPercent < 1) {
+            progressTextEl.style.background = 'linear-gradient(135deg, #54a0ff, #2e86de)';
+            progressTextEl.style.padding = '4px 8px';
+            progressTextEl.style.borderRadius = '12px';
+            progressTextEl.style.color = '#ffffff';
+          } else {
+            progressTextEl.style.background = 'linear-gradient(135deg, #1dd1a1, #10ac84)';
+            progressTextEl.style.padding = '4px 8px';
+            progressTextEl.style.borderRadius = '12px';
+            progressTextEl.style.color = '#ffffff';
+          }
         }
 
         // Green checkmark indicator visibility when all questions of this office are filled
