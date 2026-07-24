@@ -993,7 +993,7 @@ function updateDistrictMap(data, stats) {
   const loader = document.getElementById('mapLoader');
   if (loader) loader.classList.remove('hidden');
 
-  fetch('https://raw.githubusercontent.com/mesaugat/geoJSON-Nepal/master/nepal-districts-new.geojson')
+  fetch('https://raw.githubusercontent.com/Acesmndr/nepal-geojson/master/generated-geojson/nepal-with-districts-acesmndr.geojson')
     .then(response => response.json())
     .then(geojson => {
       if (loader) loader.classList.add('hidden');
