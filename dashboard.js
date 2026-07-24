@@ -184,9 +184,69 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeOfficeFilter();
   initializeNepaliDatePicker();
   initializeCollapsibleSections();
+  initializeChartZoom();
   loadDashboardData();
   updateSortIcons();
 });
+
+// Initialize chart zoom functionality
+function initializeChartZoom() {
+  const chartContainers = document.querySelectorAll('.chart-container');
+  chartContainers.forEach(container => {
+    container.addEventListener('click', function(e) {
+      // Don't zoom if clicking on canvas (chart itself)
+      if (e.target.tagName === 'CANVAS') return;
+      
+      // Toggle zoom
+      this.classList.toggle('zoomed');
+      
+      // Add backdrop when zoomed
+      if (this.classList.contains('zoomed')) {
+        createBackdrop();
+      } else {
+        removeBackdrop();
+      }
+    });
+  });
+}
+
+function createBackdrop() {
+  const backdrop = document.createElement('div');
+  backdrop.id = 'chart-zoom-backdrop';
+  backdrop.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  `;
+  backdrop.addEventListener('click', function() {
+    const zoomedContainer = document.querySelector('.chart-container.zoomed');
+    if (zoomedContainer) {
+      zoomedContainer.classList.remove('zoomed');
+      backdrop.style.opacity = '0';
+      setTimeout(() => removeBackdrop(), 600);
+    }
+  });
+  document.body.appendChild(backdrop);
+  
+  // Fade in backdrop
+  setTimeout(() => {
+    backdrop.style.opacity = '1';
+  }, 10);
+}
+
+function removeBackdrop() {
+  const backdrop = document.getElementById('chart-zoom-backdrop');
+  if (backdrop) {
+    backdrop.remove();
+  }
+}
 
 function initializeCollapsibleSections() {
   const filtersSection = document.querySelector('.filters-section');
@@ -504,6 +564,10 @@ function updateCharts(data, stats) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 2000,
+        easing: 'easeInOutQuart'
+      },
       plugins: {
         legend: {
           display: false
@@ -557,6 +621,10 @@ function updateCharts(data, stats) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 1500,
+        easing: 'easeOutBounce'
+      },
       plugins: {
         legend: {
           display: false
@@ -640,6 +708,10 @@ function updateCharts(data, stats) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 1800,
+        easing: 'easeOutElastic'
+      },
       plugins: {
         legend: {
           display: false
@@ -695,6 +767,12 @@ function updateCharts(data, stats) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        animateRotate: true,
+        animateScale: true,
+        duration: 2000,
+        easing: 'easeInOutCubic'
+      },
       plugins: {
         legend: {
           position: 'right',
@@ -737,6 +815,10 @@ function updateCharts(data, stats) {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
+      animation: {
+        duration: 1600,
+        easing: 'easeInOutQuint'
+      },
       plugins: {
         legend: {
           display: false
@@ -786,6 +868,10 @@ function updateCharts(data, stats) {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
+      animation: {
+        duration: 1400,
+        easing: 'easeInOutQuart'
+      },
       plugins: {
         legend: {
           display: false
@@ -836,6 +922,10 @@ function updateCharts(data, stats) {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
+      animation: {
+        duration: 1700,
+        easing: 'easeOutBack'
+      },
       plugins: {
         legend: {
           display: false
@@ -886,6 +976,10 @@ function updateCharts(data, stats) {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
+      animation: {
+        duration: 1700,
+        easing: 'easeOutBack'
+      },
       plugins: {
         legend: {
           display: false
